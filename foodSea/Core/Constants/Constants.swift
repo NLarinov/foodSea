@@ -1,0 +1,113 @@
+import Foundation
+
+enum Constants {
+    enum API {
+        static let baseURL = "https://api.foodsea.com/v1"
+        static let timeoutInterval: TimeInterval = 10
+        static let itemsPerPage = 20
+    }
+
+    enum UI {
+        static let minimumTapSize: CGFloat = 44
+        static let standardPadding: CGFloat = 16
+        static let smallPadding: CGFloat = 8
+        static let largePadding: CGFloat = 24
+        static let cornerRadius: CGFloat = 12
+        static let smallCornerRadius: CGFloat = 8
+        static let cellSpacing: CGFloat = 12
+        static let productImageHeight: CGFloat = 200
+        static let thumbnailSize: CGFloat = 80
+        static let buttonHeight: CGFloat = 50
+        static let searchBarHeight: CGFloat = 44
+        static let tabBarIconSize: CGFloat = 24
+        static let sectionHeaderHeight: CGFloat = 44
+        static let separatorInset: CGFloat = 16
+        static let badgeFontSize: CGFloat = 12
+        static let titleFontSize: CGFloat = 17
+        static let subtitleFontSize: CGFloat = 14
+        static let captionFontSize: CGFloat = 12
+        static let priceFontSize: CGFloat = 16
+        static let largeTitleFontSize: CGFloat = 28
+    }
+
+    enum Animation {
+        static let defaultDuration: TimeInterval = 0.3
+        static let longDuration: TimeInterval = 0.5
+        static let springDamping: CGFloat = 0.8
+    }
+
+    enum Search {
+        static let debounceInterval: TimeInterval = 0.3
+    }
+
+    enum Cache {
+        static let productTTL: TimeInterval = 300
+        static let detailTTL: TimeInterval = 600
+        static let searchTTL: TimeInterval = 120
+        static let imageCacheMaxSize = 100 * 1024 * 1024
+    }
+
+    enum Mock {
+        static let shortDelay: UInt64 = 300_000_000
+        static let mediumDelay: UInt64 = 500_000_000
+        static let longDelay: UInt64 = 1_000_000_000
+    }
+
+    enum Cart {
+        static let maxQuantity = 99
+        static let minQuantity = 1
+        static let storageKey = "foodsea_cart_items"
+    }
+
+    enum Onboarding {
+        static let shownKey = "foodsea_onboarding_shown"
+        static let slideCount = 3
+    }
+
+    enum TabBar {
+        static let homeTitle = "Главная"
+        static let catalogTitle = "Каталог"
+        static let cartTitle = "Корзина"
+        static let ordersTitle = "Заказы"
+        static let homeIcon = "house.fill"
+        static let catalogIcon = "square.grid.2x2.fill"
+        static let cartIcon = "cart.fill"
+        static let ordersIcon = "clock.fill"
+    }
+
+    enum Strings {
+        static let appName = "FoodSea"
+        static let emptyCartMessage = "Корзина пуста"
+        static let emptyCartAction = "Перейти в каталог"
+        static let emptySearchMessage = "Ничего не найдено"
+        static let emptySearchHint = "Попробуйте другой запрос"
+        static let emptyOrdersMessage = "У вас пока нет заказов"
+        static let optimizeButton = "Оптимизировать"
+        static let addToCartButton = "В корзину"
+        static let applyFilters = "Применить"
+        static let resetFilters = "Сбросить"
+        static let closeButton = "Закрыть"
+        static let clearCart = "Очистить корзину"
+        static let clearCartConfirmation = "Вы уверены, что хотите очистить корзину?"
+        static let deleteConfirmation = "Удалить товар?"
+        static let cancel = "Отмена"
+        static let delete = "Удалить"
+        static let retry = "Повторить"
+        static let networkError = "Проверьте подключение к интернету"
+        static let serverError = "Что-то пошло не так. Попробуйте позже"
+        static let addedToCart = "Товар добавлен в корзину"
+        static let scannerTitle = "Сканер штрихкода"
+        static let scannerHint = "Наведите камеру на штрихкод"
+        static let productNotFound = "Товар не найден"
+        static let manualEntry = "Ввести вручную"
+        static let voiceTitle = "Голосовой ввод"
+        static let voiceHint = "Например: молоко, хлеб белый, 2 кг яблок"
+        static let voiceRecording = "Говорите..."
+        static let voiceProcessing = "Обработка..."
+        static let addAllToCart = "Добавить все в корзину"
+        static let submitOrder = "Оформить заказ"
+        static let orderConfirmed = "Заказ оформлен"
+        static let toOrders = "К заказам"
+        static let toCatalog = "В каталог"
+    }
+}
