@@ -1,6 +1,6 @@
 import Foundation
 
-struct Product: Codable, Identifiable, Hashable, Sendable {
+nonisolated struct Product: Codable, Identifiable, Hashable, Sendable {
     let id: String
     let name: String
     let description: String

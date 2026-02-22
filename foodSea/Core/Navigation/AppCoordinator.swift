@@ -33,5 +33,18 @@ final class AppCoordinator {
 
         window.rootViewController = tabBarController
         window.makeKeyAndVisible()
+
+        showOnboardingIfNeeded()
+    }
+
+    private func showOnboardingIfNeeded() {
+        guard !UserDefaults.standard.bool(forKey: Constants.Onboarding.shownKey) else { return }
+
+        let onboardingVC = OnboardingViewController()
+        onboardingVC.modalPresentationStyle = .fullScreen
+        onboardingVC.onComplete = { [weak onboardingVC] in
+            onboardingVC?.dismiss(animated: true)
+        }
+        tabBarController.present(onboardingVC, animated: false)
     }
 }

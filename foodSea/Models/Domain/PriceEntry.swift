@@ -1,6 +1,6 @@
 import Foundation
 
-struct PriceEntry: Codable, Hashable, Sendable {
+nonisolated struct PriceEntry: Codable, Hashable, Sendable {
     let store: Store
     let price: Decimal
     let originalPrice: Decimal?
