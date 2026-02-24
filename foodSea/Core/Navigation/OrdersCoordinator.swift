@@ -16,16 +16,18 @@ final class OrdersCoordinator: Coordinator {
     }
 
     func start() {
-        let placeholder = makePlaceholder(title: Constants.TabBar.ordersTitle)
-        navigationController.viewControllers = [placeholder]
+        let viewModel = OrderHistoryViewModel(orderService: container.orderService)
+        let historyVC = OrderHistoryViewController(viewModel: viewModel)
+        historyVC.onOrderSelected = { [weak self] orderId in
+            self?.showOrderDetail(orderId: orderId)
+        }
+        navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.viewControllers = [historyVC]
     }
 
-    private func makePlaceholder(title: String) -> UIViewController {
-        let vc = UIViewController()
-        vc.view.backgroundColor = UIColor.App.background
-        vc.title = title
-        vc.navigationItem.largeTitleDisplayMode = .always
-        navigationController.navigationBar.prefersLargeTitles = true
-        return vc
+    private func showOrderDetail(orderId: String) {
+        let viewModel = OrderDetailViewModel(orderId: orderId, orderService: container.orderService)
+        let detailVC = OrderDetailViewController(viewModel: viewModel)
+        navigationController.pushViewController(detailVC, animated: true)
     }
 }

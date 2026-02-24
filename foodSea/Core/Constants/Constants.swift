@@ -75,6 +75,42 @@ enum Constants {
         static let ordersIcon = "clock.fill"
     }
 
+    enum Optimization {
+        static let title = "Результат оптимизации"
+        static let totalCostLabel = "Товары"
+        static let deliveryCostLabel = "Доставка"
+        static let grandTotalLabel = "Итого"
+        static let savingsFormat = "Вы экономите %@ ₽"
+        static let storeOrdersSection = "Заказы по магазинам"
+        static let substitutionsSection = "Замены"
+        static let applyButton = "Применить и оформить"
+        static let backToCartButton = "Вернуться к корзине"
+        static let loadingMessage = "Оптимизируем корзину..."
+        static let noSubstitutions = "Замен нет"
+        static let acceptButton = "Принять"
+        static let rejectButton = "Отклонить"
+        static let deliveryFreeLabel = "Бесплатно"
+        static let itemsCountFormat = "%d товаров"
+        static let storeHeaderHeight: CGFloat = 56
+        static let savingsBannerHeight: CGFloat = 48
+        static let timelineDotSize: CGFloat = 12
+        static let timelineLineWidth: CGFloat = 2
+    }
+
+    enum Orders {
+        static let title = "Заказы"
+        static let allFilter = "Все"
+        static let orderNumberPrefix = "Заказ"
+        static let checkoutTitle = "Оформление"
+        static let checkoutSummaryHeader = "Ваш заказ"
+        static let confirmationTitle = "Заказ оформлен!"
+        static let confirmationMessage = "Ваш заказ успешно создан"
+        static let estimatedDeliveryLabel = "Ожидаемая доставка"
+        static let deliveryAddressLabel = "Адрес доставки"
+        static let financialSummaryHeader = "Итого по заказу"
+        static let statusFilterHeight: CGFloat = 36
+    }
+
     enum Strings {
         static let appName = "FoodSea"
         static let emptyCartMessage = "Корзина пуста"
