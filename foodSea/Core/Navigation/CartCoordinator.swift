@@ -16,16 +16,32 @@ final class CartCoordinator: Coordinator {
     }
 
     func start() {
-        let placeholder = makePlaceholder(title: Constants.TabBar.cartTitle)
-        navigationController.viewControllers = [placeholder]
+        let viewModel = CartViewModel(cartService: container.cartService)
+        let cartVC = CartViewController(viewModel: viewModel)
+        cartVC.onProductSelected = { [weak self] product in
+            self?.showProductDetail(product)
+        }
+        cartVC.onGoToCatalog = { [weak self] in
+            self?.switchToCatalog()
+        }
+        navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.viewControllers = [cartVC]
     }
 
-    private func makePlaceholder(title: String) -> UIViewController {
-        let vc = UIViewController()
-        vc.view.backgroundColor = UIColor.App.background
-        vc.title = title
-        vc.navigationItem.largeTitleDisplayMode = .always
-        navigationController.navigationBar.prefersLargeTitles = true
-        return vc
+    private func showProductDetail(_ product: Product) {
+        let viewModel = ProductDetailViewModel(
+            productId: product.id,
+            productService: container.productService,
+            cartService: container.cartService
+        )
+        let detailVC = ProductDetailViewController(viewModel: viewModel)
+        detailVC.onSimilarProductSelected = { [weak self] product in
+            self?.showProductDetail(product)
+        }
+        navigationController.pushViewController(detailVC, animated: true)
+    }
+
+    private func switchToCatalog() {
+        navigationController.tabBarController?.selectedIndex = 1
     }
 }

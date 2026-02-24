@@ -5,6 +5,7 @@ final class CatalogViewController: UIViewController {
     nonisolated enum Section: Sendable { case main }
 
     var onProductSelected: ((Product) -> Void)?
+    var onSearchTapped: (() -> Void)?
 
     private let viewModel: CatalogViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -68,6 +69,12 @@ final class CatalogViewController: UIViewController {
         title = Constants.TabBar.catalogTitle
         view.backgroundColor = UIColor.App.background
         navigationItem.largeTitleDisplayMode = .always
+
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.placeholder = Constants.Strings.emptySearchMessage
+        searchController.searchBar.delegate = self
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = true
 
         view.addSubview(collectionView)
         collectionView.pinToSuperview()
@@ -182,5 +189,13 @@ extension CatalogViewController: UICollectionViewDelegate {
         if indexPath.item >= itemCount - Constants.API.itemsPerPage / 2 {
             viewModel.loadNextPage()
         }
+    }
+}
+
+extension CatalogViewController: UISearchBarDelegate {
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        navigationItem.searchController?.isActive = false
+        onSearchTapped?()
+        return false
     }
 }

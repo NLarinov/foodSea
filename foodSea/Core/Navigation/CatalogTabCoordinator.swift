@@ -24,6 +24,9 @@ final class CatalogTabCoordinator: Coordinator {
         catalogVC.onProductSelected = { [weak self] product in
             self?.showProductDetail(product)
         }
+        catalogVC.onSearchTapped = { [weak self] in
+            self?.showSearch()
+        }
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.viewControllers = [catalogVC]
     }
@@ -39,5 +42,14 @@ final class CatalogTabCoordinator: Coordinator {
             self?.showProductDetail(product)
         }
         navigationController.pushViewController(detailVC, animated: true)
+    }
+
+    private func showSearch() {
+        let viewModel = SearchViewModel(productService: container.productService)
+        let searchVC = SearchViewController(viewModel: viewModel)
+        searchVC.onProductSelected = { [weak self] product in
+            self?.showProductDetail(product)
+        }
+        navigationController.pushViewController(searchVC, animated: true)
     }
 }
