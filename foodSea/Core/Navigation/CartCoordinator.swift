@@ -27,6 +27,9 @@ final class CartCoordinator: Coordinator {
         cartVC.onOptimize = { [weak self] in
             self?.showOptimization(cartItems: viewModel.cartItems)
         }
+        cartVC.onVoiceInput = { [weak self] in
+            self?.showVoiceInput()
+        }
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.viewControllers = [cartVC]
     }
@@ -83,6 +86,22 @@ final class CartCoordinator: Coordinator {
             self?.switchToCatalog()
         }
         navigationController.pushViewController(confirmVC, animated: true)
+    }
+
+    private func showVoiceInput() {
+        let viewModel = VoiceInputViewModel(
+            voiceService: container.voiceService,
+            cartService: container.cartService
+        )
+        let voiceVC = VoiceInputViewController(viewModel: viewModel)
+        let navVC = UINavigationController(rootViewController: voiceVC)
+        voiceVC.onAddedToCart = { [weak navVC] in
+            navVC?.dismiss(animated: true)
+        }
+        voiceVC.onClose = { [weak navVC] in
+            navVC?.dismiss(animated: true)
+        }
+        navigationController.present(navVC, animated: true)
     }
 
     private func switchToCatalog() {

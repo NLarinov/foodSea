@@ -35,6 +35,7 @@ final class AppCoordinator {
         window.makeKeyAndVisible()
 
         showOnboardingIfNeeded()
+        setupNotifications(ordersCoordinator: ordersCoordinator)
     }
 
     private func showOnboardingIfNeeded() {
@@ -43,8 +44,21 @@ final class AppCoordinator {
         let onboardingVC = OnboardingViewController()
         onboardingVC.modalPresentationStyle = .fullScreen
         onboardingVC.onComplete = { [weak onboardingVC] in
-            onboardingVC?.dismiss(animated: true)
+            onboardingVC?.dismiss(animated: true) {
+                NotificationManager.shared.requestPermission()
+            }
         }
         tabBarController.present(onboardingVC, animated: false)
+    }
+
+    private func setupNotifications(ordersCoordinator: OrdersCoordinator) {
+        if UserDefaults.standard.bool(forKey: Constants.Onboarding.shownKey) {
+            NotificationManager.shared.requestPermission()
+        }
+
+        NotificationManager.shared.onOrderTapped = { [weak self] orderId in
+            self?.tabBarController.selectedIndex = 3
+            ordersCoordinator.showOrderDetail(orderId: orderId)
+        }
     }
 }

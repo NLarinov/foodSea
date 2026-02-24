@@ -6,6 +6,7 @@ final class CatalogViewController: UIViewController {
 
     var onProductSelected: ((Product) -> Void)?
     var onSearchTapped: (() -> Void)?
+    var onScannerTapped: (() -> Void)?
 
     private let viewModel: CatalogViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -69,6 +70,13 @@ final class CatalogViewController: UIViewController {
         title = Constants.TabBar.catalogTitle
         view.backgroundColor = UIColor.App.background
         navigationItem.largeTitleDisplayMode = .always
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "barcode.viewfinder"),
+            style: .plain,
+            target: self,
+            action: #selector(scannerTapped)
+        )
 
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.placeholder = Constants.Strings.emptySearchMessage
@@ -170,6 +178,10 @@ final class CatalogViewController: UIViewController {
 
     @objc private func handleRefresh() {
         viewModel.refresh()
+    }
+
+    @objc private func scannerTapped() {
+        onScannerTapped?()
     }
 }
 

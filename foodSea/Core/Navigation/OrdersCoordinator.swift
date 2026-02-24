@@ -25,7 +25,7 @@ final class OrdersCoordinator: Coordinator {
         navigationController.viewControllers = [historyVC]
     }
 
-    private func showOrderDetail(orderId: String) {
+    func showOrderDetail(orderId: String) {
         let viewModel = OrderDetailViewModel(orderId: orderId, orderService: container.orderService)
         let detailVC = OrderDetailViewController(viewModel: viewModel)
         navigationController.pushViewController(detailVC, animated: true)

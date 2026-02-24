@@ -111,6 +111,32 @@ enum Constants {
         static let statusFilterHeight: CGFloat = 36
     }
 
+    enum Scanner {
+        static let overlayAlpha: CGFloat = 0.5
+        static let targetRectSize: CGFloat = 250
+        static let instructionBottomOffset: CGFloat = 60
+        static let manualEntryPlaceholder = "Введите штрихкод"
+    }
+
+    enum Voice {
+        static let micButtonSize: CGFloat = 80
+        static let pulseScale: CGFloat = 1.2
+        static let pulseAnimationDuration: TimeInterval = 1.0
+        static let confidenceBarHeight: CGFloat = 4
+        static let maxRecordingDuration: TimeInterval = 30
+        static let recordingTimerInterval: TimeInterval = 0.1
+    }
+
+    enum Notifications {
+        static let orderUpdateTitle = "Обновление заказа"
+        static let orderDeliveredBody = "Ваш заказ доставлен!"
+        static let orderInTransitBody = "Курьер уже в пути"
+        static let orderAssemblingBody = "Ваш заказ собирается"
+        static let localNotificationDelay: TimeInterval = 5
+        static let categoryIdentifier = "foodsea_order"
+        static let orderIdKey = "order_id"
+    }
+
     enum Strings {
         static let appName = "FoodSea"
         static let emptyCartMessage = "Корзина пуста"

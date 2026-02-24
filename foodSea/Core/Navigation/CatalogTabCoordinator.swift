@@ -27,6 +27,9 @@ final class CatalogTabCoordinator: Coordinator {
         catalogVC.onSearchTapped = { [weak self] in
             self?.showSearch()
         }
+        catalogVC.onScannerTapped = { [weak self] in
+            self?.showBarcodeScanner()
+        }
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.viewControllers = [catalogVC]
     }
@@ -51,5 +54,20 @@ final class CatalogTabCoordinator: Coordinator {
             self?.showProductDetail(product)
         }
         navigationController.pushViewController(searchVC, animated: true)
+    }
+
+    private func showBarcodeScanner() {
+        let viewModel = BarcodeScannerViewModel(productService: container.productService)
+        let scannerVC = BarcodeScannerViewController(viewModel: viewModel)
+        scannerVC.modalPresentationStyle = .fullScreen
+        scannerVC.onProductFound = { [weak self] product in
+            scannerVC.dismiss(animated: true) {
+                self?.showProductDetail(product)
+            }
+        }
+        scannerVC.onClose = {
+            scannerVC.dismiss(animated: true)
+        }
+        navigationController.present(scannerVC, animated: true)
     }
 }

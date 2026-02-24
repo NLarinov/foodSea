@@ -5,6 +5,7 @@ final class CartViewController: UIViewController {
     var onProductSelected: ((Product) -> Void)?
     var onGoToCatalog: (() -> Void)?
     var onOptimize: (() -> Void)?
+    var onVoiceInput: (() -> Void)?
 
     private let viewModel: CartViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -104,13 +105,20 @@ final class CartViewController: UIViewController {
         view.backgroundColor = UIColor.App.background
         navigationItem.largeTitleDisplayMode = .always
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
+        let voiceButton = UIBarButtonItem(
+            image: UIImage(systemName: "mic.fill"),
+            style: .plain,
+            target: self,
+            action: #selector(voiceInputTapped)
+        )
+        let clearButton = UIBarButtonItem(
             title: Constants.Strings.clearCart,
             style: .plain,
             target: self,
             action: #selector(clearCartTapped)
         )
-        navigationItem.rightBarButtonItem?.tintColor = UIColor.App.error
+        clearButton.tintColor = UIColor.App.error
+        navigationItem.rightBarButtonItems = [clearButton, voiceButton]
 
         let bottomStack = UIStackView(arrangedSubviews: [totalLabel, optimizeButton])
         bottomStack.axis = .horizontal
@@ -235,6 +243,10 @@ final class CartViewController: UIViewController {
 
     @objc private func optimizeTapped() {
         onOptimize?()
+    }
+
+    @objc private func voiceInputTapped() {
+        onVoiceInput?()
     }
 
     @objc private func goToCatalogTapped() {
