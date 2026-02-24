@@ -1,9 +1,11 @@
 import Foundation
 
 final class MockOrderService: OrderServiceProtocol, @unchecked Sendable {
+    private var createdOrders: [Order] = []
+
     func fetchOrders() async throws -> [Order] {
         try await Task.sleep(nanoseconds: Constants.Mock.mediumDelay)
-        return MockData.orders
+        return createdOrders + MockData.orders
     }
 
     func fetchOrderDetail(id: String) async throws -> OrderDetail {
@@ -34,6 +36,7 @@ final class MockOrderService: OrderServiceProtocol, @unchecked Sendable {
                 }
             }
         )
+        createdOrders.insert(order, at: 0)
         return order
     }
 

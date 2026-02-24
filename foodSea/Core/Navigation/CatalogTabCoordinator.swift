@@ -16,11 +16,25 @@ final class CatalogTabCoordinator: Coordinator {
     }
 
     func start() {
+        let browseVC = CatalogBrowseViewController()
+        browseVC.title = Constants.TabBar.catalogTitle
+        browseVC.onCategorySelected = { [weak self] categoryId in
+            self?.showCategoryProducts(categoryId: categoryId)
+        }
+        navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.viewControllers = [browseVC]
+    }
+
+    private func showCategoryProducts(categoryId: String) {
         let viewModel = CatalogViewModel(
             productService: container.productService,
             cartService: container.cartService
         )
         let catalogVC = CatalogViewController(viewModel: viewModel)
+
+        let categoryName = MockData.categories.first { $0.id == categoryId }?.name ?? Constants.TabBar.catalogTitle
+        catalogVC.title = categoryName
+
         catalogVC.onProductSelected = { [weak self] product in
             self?.showProductDetail(product)
         }
@@ -33,8 +47,7 @@ final class CatalogTabCoordinator: Coordinator {
         catalogVC.onVoiceTapped = { [weak self] in
             self?.showVoiceInput()
         }
-        navigationController.navigationBar.prefersLargeTitles = true
-        navigationController.viewControllers = [catalogVC]
+        navigationController.pushViewController(catalogVC, animated: true)
     }
 
     private func showProductDetail(_ product: Product) {

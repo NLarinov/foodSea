@@ -16,26 +16,25 @@ final class HomeCoordinator: Coordinator {
     }
 
     func start() {
-        let viewModel = CatalogViewModel(
+        let viewModel = HomeViewModel(
             productService: container.productService,
             cartService: container.cartService
         )
-        let catalogVC = CatalogViewController(viewModel: viewModel)
-        catalogVC.title = Constants.TabBar.homeTitle
-        catalogVC.onProductSelected = { [weak self] product in
+        let homeVC = HomeViewController(viewModel: viewModel)
+        homeVC.onProductSelected = { [weak self] product in
             self?.showProductDetail(product)
         }
-        catalogVC.onSearchTapped = { [weak self] in
+        homeVC.onSearchTapped = { [weak self] in
             self?.showSearch()
         }
-        catalogVC.onScannerTapped = { [weak self] in
+        homeVC.onScannerTapped = { [weak self] in
             self?.showBarcodeScanner()
         }
-        catalogVC.onVoiceTapped = { [weak self] in
+        homeVC.onVoiceTapped = { [weak self] in
             self?.showVoiceInput()
         }
         navigationController.navigationBar.prefersLargeTitles = true
-        navigationController.viewControllers = [catalogVC]
+        navigationController.viewControllers = [homeVC]
     }
 
     private func showProductDetail(_ product: Product) {

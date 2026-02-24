@@ -137,10 +137,26 @@ enum Constants {
         static let orderIdKey = "order_id"
     }
 
+    enum Home {
+        static let bannerHeight: CGFloat = 140
+        static let filterChipHeight: CGFloat = 36
+        static let allFilterTitle = "Все"
+        static let forYouTitle = "Рекомендуем для вас"
+        static let promoTitle = "Акции и скидки"
+    }
+
+    enum Catalog {
+        static let subcategoryCellHeight: CGFloat = 100
+        static let subcategoryCellWidth: CGFloat = 110
+        static let subcategoryIconSize: CGFloat = 32
+    }
+
     enum Strings {
         static let appName = "FoodSea"
-        static let emptyCartMessage = "Корзина пуста"
+        static let emptyCartMessage = "В корзине пока ничего нет("
+        static let emptyCartSubtitle = "Давайте наполним её!"
         static let emptyCartAction = "Перейти в каталог"
+        static let recommendedProducts = "Популярные товары"
         static let emptySearchMessage = "Ничего не найдено"
         static let emptySearchHint = "Попробуйте другой запрос"
         static let emptyOrdersMessage = "У вас пока нет заказов"

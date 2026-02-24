@@ -5,6 +5,11 @@ final class MockCartService: CartServiceProtocol, @unchecked Sendable {
     static let cartItemCountKey = "cartItemCount"
 
     private var items: [CartItem] = []
+    private let storage = CartStorage()
+
+    init() {
+        items = storage.load()
+    }
 
     func getCartItems() async throws -> [CartItem] {
         try await Task.sleep(nanoseconds: Constants.Mock.shortDelay)

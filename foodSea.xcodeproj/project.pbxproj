@@ -6,15 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		7FEFEA072F32B4EB0029252A /* foodSea.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = foodSea.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		7FEFEA192F32B4ED0029252A = {
+		7FEFEA192F32B4ED0029252A /* Exceptions for "foodSea" folder in "foodSea" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -24,7 +21,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		7FEFEA092F32B4EB0029252A /* foodSea */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (7FEFEA192F32B4ED0029252A, ); path = foodSea; sourceTree = "<group>"; };
+		7FEFEA092F32B4EB0029252A /* foodSea */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7FEFEA192F32B4ED0029252A /* Exceptions for "foodSea" folder in "foodSea" target */,
+			);
+			path = foodSea;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,9 +145,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7CU9TZ8R57;
+				DEVELOPMENT_TEAM = Z28TTNTS6L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = foodSea/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FoodSea;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -172,9 +178,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7CU9TZ8R57;
+				DEVELOPMENT_TEAM = Z28TTNTS6L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = foodSea/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FoodSea;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

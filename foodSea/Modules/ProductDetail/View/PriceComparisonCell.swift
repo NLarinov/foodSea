@@ -7,6 +7,7 @@ final class PriceComparisonCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: Constants.UI.titleFontSize, weight: .medium)
         label.textColor = UIColor.App.label
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
 
@@ -14,6 +15,7 @@ final class PriceComparisonCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: Constants.UI.priceFontSize, weight: .bold)
         label.textColor = UIColor.App.pricePrimary
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
 
@@ -21,6 +23,7 @@ final class PriceComparisonCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: Constants.UI.captionFontSize)
         label.textColor = UIColor.App.priceOriginal
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
 
@@ -28,6 +31,7 @@ final class PriceComparisonCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: Constants.UI.captionFontSize)
         label.textColor = UIColor.App.secondaryLabel
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
 
@@ -111,10 +115,15 @@ final class PriceComparisonCell: UITableViewCell {
         infoStack.axis = .vertical
         infoStack.spacing = Constants.UI.smallPadding / 2
 
+        infoStack.setContentCompressionResistancePriority(.required, for: .horizontal)
+
         let mainStack = UIStackView(arrangedSubviews: [infoStack, promotionBadge])
         mainStack.axis = .horizontal
         mainStack.alignment = .center
         mainStack.spacing = Constants.UI.smallPadding
+
+        promotionBadge.setContentHuggingPriority(.required, for: .horizontal)
+        promotionBadge.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         contentView.addSubview(mainStack)
         mainStack.translatesAutoresizingMaskIntoConstraints = false

@@ -16,7 +16,7 @@ final class CartCoordinator: Coordinator {
     }
 
     func start() {
-        let viewModel = CartViewModel(cartService: container.cartService)
+        let viewModel = CartViewModel(cartService: container.cartService, productService: container.productService)
         let cartVC = CartViewController(viewModel: viewModel)
         cartVC.onProductSelected = { [weak self] product in
             self?.showProductDetail(product)
@@ -76,6 +76,8 @@ final class CartCoordinator: Coordinator {
     }
 
     private func showConfirmation(order: Order) {
+        clearCartAfterOrder()
+
         let confirmVC = OrderConfirmationViewController(order: order)
         confirmVC.onGoToOrders = { [weak self] in
             self?.navigationController.popToRootViewController(animated: false)
@@ -86,6 +88,13 @@ final class CartCoordinator: Coordinator {
             self?.switchToCatalog()
         }
         navigationController.pushViewController(confirmVC, animated: true)
+    }
+
+    private func clearCartAfterOrder() {
+        Task {
+            try? await container.cartService.clearCart()
+        }
+        CartStorage().clear()
     }
 
     private func showVoiceInput() {

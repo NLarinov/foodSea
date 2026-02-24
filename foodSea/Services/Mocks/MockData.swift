@@ -21,6 +21,67 @@ enum MockData {
         Category(id: "cat_8", name: "Бытовая химия", iconName: "sparkles"),
     ]
 
+    struct Subcategory: Hashable, Sendable {
+        let name: String
+        let iconName: String
+        let categoryId: String
+    }
+
+    static let subcategories: [String: [Subcategory]] = [
+        "cat_1": [
+            Subcategory(name: "Молоко, масло и яйца", iconName: "drop", categoryId: "cat_1"),
+            Subcategory(name: "Сыры", iconName: "circle.grid.2x2", categoryId: "cat_1"),
+            Subcategory(name: "Кефир, сметана, творог", iconName: "cup.and.saucer", categoryId: "cat_1"),
+            Subcategory(name: "Йогурты и десерты", iconName: "birthday.cake", categoryId: "cat_1"),
+        ],
+        "cat_2": [
+            Subcategory(name: "Хлеб", iconName: "oval", categoryId: "cat_2"),
+            Subcategory(name: "Выпечка и сдоба", iconName: "birthday.cake", categoryId: "cat_2"),
+            Subcategory(name: "Лаваш и лепёшки", iconName: "circle", categoryId: "cat_2"),
+        ],
+        "cat_3": [
+            Subcategory(name: "Курица и индейка", iconName: "fork.knife", categoryId: "cat_3"),
+            Subcategory(name: "Свинина и говядина", iconName: "flame", categoryId: "cat_3"),
+            Subcategory(name: "Фарш и полуфабрикаты", iconName: "seal", categoryId: "cat_3"),
+            Subcategory(name: "Колбасы и сосиски", iconName: "oval.portrait", categoryId: "cat_3"),
+            Subcategory(name: "Яйца", iconName: "oval", categoryId: "cat_3"),
+        ],
+        "cat_4": [
+            Subcategory(name: "Овощи", iconName: "leaf", categoryId: "cat_4"),
+            Subcategory(name: "Фрукты", iconName: "applelogo", categoryId: "cat_4"),
+            Subcategory(name: "Зелень и салаты", iconName: "leaf.arrow.circlepath", categoryId: "cat_4"),
+        ],
+        "cat_5": [
+            Subcategory(name: "Вода", iconName: "drop", categoryId: "cat_5"),
+            Subcategory(name: "Соки и морсы", iconName: "waterbottle", categoryId: "cat_5"),
+            Subcategory(name: "Газированные напитки", iconName: "bubbles.and.sparkles", categoryId: "cat_5"),
+            Subcategory(name: "Чай и кофе", iconName: "cup.and.saucer", categoryId: "cat_5"),
+        ],
+        "cat_6": [
+            Subcategory(name: "Крупы", iconName: "bag", categoryId: "cat_6"),
+            Subcategory(name: "Макароны", iconName: "rectangle.stack", categoryId: "cat_6"),
+            Subcategory(name: "Масло и соусы", iconName: "drop", categoryId: "cat_6"),
+        ],
+        "cat_7": [
+            Subcategory(name: "Шоколад", iconName: "square.fill", categoryId: "cat_7"),
+            Subcategory(name: "Печенье и вафли", iconName: "circle.grid.3x3", categoryId: "cat_7"),
+            Subcategory(name: "Конфеты", iconName: "gift", categoryId: "cat_7"),
+        ],
+        "cat_8": [
+            Subcategory(name: "Для кухни", iconName: "sparkles", categoryId: "cat_8"),
+            Subcategory(name: "Для стирки", iconName: "washer", categoryId: "cat_8"),
+            Subcategory(name: "Бумажная продукция", iconName: "doc", categoryId: "cat_8"),
+        ],
+    ]
+
+    static let promoBanners: [(productId: String, title: String, subtitle: String, color: String)] = [
+        ("prod_7", "Куриная грудка", "Скидка 15% на Петелинку", "systemOrange"),
+        ("prod_25", "Persil со скидкой", "Стиральный порошок -14%", "systemBlue"),
+        ("prod_22", "Юбилейное печенье", "Скидка 20% на классику", "systemPurple"),
+        ("prod_9", "Свиная шейка", "По акции в Магните", "systemRed"),
+        ("prod_2", "Кефир 1%", "Домик в деревне -20%", "systemGreen"),
+    ]
+
     static let products: [Product] = [
         Product(
             id: "prod_1", name: "Молоко Простоквашино 3.2%", description: "Молоко пастеризованное, 930 мл",
@@ -429,6 +490,33 @@ enum MockData {
                 ],
                 deliveryAddress: "пр. Мира, д. 10, кв. 3",
                 estimatedDelivery: calendar.date(byAdding: .hour, value: 1, to: Date())
+            ),
+            "order_3": OrderDetail(
+                order: orders[2],
+                timeline: [
+                    StatusEvent(status: .pending, timestamp: calendar.date(byAdding: .hour, value: -26, to: Date())!, description: "Заказ создан"),
+                    StatusEvent(status: .confirmed, timestamp: calendar.date(byAdding: .hour, value: -24, to: Date())!, description: "Заказ подтверждён магазинами"),
+                    StatusEvent(status: .assembling, timestamp: calendar.date(byAdding: .hour, value: -22, to: Date())!, description: "Заказ собирается"),
+                ],
+                deliveryAddress: "ул. Пушкина, д. 7, кв. 28",
+                estimatedDelivery: calendar.date(byAdding: .hour, value: 3, to: Date())
+            ),
+            "order_4": OrderDetail(
+                order: orders[3],
+                timeline: [
+                    StatusEvent(status: .pending, timestamp: calendar.date(byAdding: .hour, value: -1, to: Date())!, description: "Заказ создан"),
+                    StatusEvent(status: .confirmed, timestamp: Date(), description: "Заказ подтверждён магазином"),
+                ],
+                deliveryAddress: "Кутузовский пр., д. 24, кв. 5",
+                estimatedDelivery: calendar.date(byAdding: .hour, value: 6, to: Date())
+            ),
+            "order_5": OrderDetail(
+                order: orders[4],
+                timeline: [
+                    StatusEvent(status: .pending, timestamp: calendar.date(byAdding: .hour, value: -2, to: Date())!, description: "Заказ создан"),
+                ],
+                deliveryAddress: "ул. Гагарина, д. 15, кв. 42",
+                estimatedDelivery: calendar.date(byAdding: .hour, value: 8, to: Date())
             ),
         ]
     }()

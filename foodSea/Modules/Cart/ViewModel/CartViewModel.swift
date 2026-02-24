@@ -6,14 +6,37 @@ final class CartViewModel {
     @Published var totalCost: Decimal = 0
     @Published var isEmpty: Bool = true
     @Published var isLoading = false
+    @Published var recommendedProducts: [Product] = []
+    @Published var addedToCartMessage: String?
 
     var canOptimize: Bool { !cartItems.isEmpty }
 
     private let cartService: any CartServiceProtocol
+    private let productService: any ProductServiceProtocol
     private let cartStorage = CartStorage()
 
-    nonisolated init(cartService: any CartServiceProtocol) {
+    nonisolated init(cartService: any CartServiceProtocol, productService: any ProductServiceProtocol) {
         self.cartService = cartService
+        self.productService = productService
+    }
+
+    func loadRecommendedProducts() {
+        Task {
+            do {
+                let products = try await productService.fetchProducts(page: 0, perPage: Constants.API.itemsPerPage)
+                recommendedProducts = products
+            } catch {}
+        }
+    }
+
+    func addToCart(product: Product) {
+        Task {
+            do {
+                try await cartService.addItem(productId: product.id, quantity: Constants.Cart.minQuantity)
+                addedToCartMessage = Constants.Strings.addedToCart
+                loadCart()
+            } catch {}
+        }
     }
 
     func loadCart() {

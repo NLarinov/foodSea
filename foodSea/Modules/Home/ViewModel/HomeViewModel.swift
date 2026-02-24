@@ -1,16 +1,19 @@
 import Foundation
 import Combine
 
-final class CatalogViewModel {
+final class HomeViewModel {
     @Published var products: [Product] = []
+    @Published var filteredProducts: [Product] = []
     @Published var isLoading = false
     @Published var error: AppError?
     @Published var cartQuantities: [String: Int] = [:]
+    @Published var selectedCategory: String?
+
+    let categories = MockData.categories
+    let banners = MockData.promoBanners
 
     private let productService: any ProductServiceProtocol
     private let cartService: any CartServiceProtocol
-    private var currentPage = 0
-    private var hasMorePages = true
 
     nonisolated init(productService: any ProductServiceProtocol, cartService: any CartServiceProtocol) {
         self.productService = productService
@@ -18,20 +21,23 @@ final class CatalogViewModel {
     }
 
     func loadProducts() {
-        currentPage = 0
-        hasMorePages = true
-        products = []
-        fetchPage()
-        refreshCartQuantities()
+        isLoading = true
+        Task {
+            do {
+                let fetched = try await productService.fetchProducts(page: 0, perPage: Constants.API.itemsPerPage)
+                products = fetched
+                applyFilter()
+                refreshCartQuantities()
+            } catch {
+                self.error = error as? AppError ?? .unknown(error.localizedDescription)
+            }
+            isLoading = false
+        }
     }
 
-    func loadNextPage() {
-        guard !isLoading, hasMorePages else { return }
-        fetchPage()
-    }
-
-    func refresh() {
-        loadProducts()
+    func selectCategory(_ categoryId: String?) {
+        selectedCategory = categoryId
+        applyFilter()
     }
 
     func addToCart(product: Product) {
@@ -39,9 +45,7 @@ final class CatalogViewModel {
             do {
                 try await cartService.addItem(productId: product.id, quantity: Constants.Cart.minQuantity)
                 refreshCartQuantities()
-            } catch {
-                self.error = error as? AppError ?? .unknown(error.localizedDescription)
-            }
+            } catch {}
         }
     }
 
@@ -78,24 +82,15 @@ final class CatalogViewModel {
         cartQuantities[productId] ?? 0
     }
 
-    private func fetchPage() {
-        isLoading = true
-        error = nil
-        Task {
-            do {
-                let fetched = try await productService.fetchProducts(
-                    page: currentPage,
-                    perPage: Constants.API.itemsPerPage
-                )
-                if fetched.count < Constants.API.itemsPerPage {
-                    hasMorePages = false
-                }
-                products.append(contentsOf: fetched)
-                currentPage += 1
-            } catch {
-                self.error = error as? AppError ?? .unknown(error.localizedDescription)
-            }
-            isLoading = false
+    func product(for bannerId: String) -> Product? {
+        MockData.products.first { $0.id == bannerId }
+    }
+
+    private func applyFilter() {
+        if let categoryId = selectedCategory {
+            filteredProducts = products.filter { $0.category.id == categoryId }
+        } else {
+            filteredProducts = products
         }
     }
 }

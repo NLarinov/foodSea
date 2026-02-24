@@ -24,15 +24,20 @@ final class CatalogViewController: UIViewController {
         UICollectionViewDiffableDataSource<Section, Product>(
             collectionView: collectionView
         ) { [weak self] collectionView, indexPath, product in
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: ProductCell.reuseIdentifier,
-                for: indexPath
-            ) as? ProductCell else {
+            guard let self,
+                  let cell = collectionView.dequeueReusableCell(
+                      withReuseIdentifier: ProductCell.reuseIdentifier,
+                      for: indexPath
+                  ) as? ProductCell else {
                 return UICollectionViewCell()
             }
-            cell.configure(with: product)
+            let qty = viewModel.quantity(for: product.id)
+            cell.configure(with: product, quantity: qty)
             cell.addToCartAction = { [weak self] in
                 self?.viewModel.addToCart(product: product)
+            }
+            cell.onQuantityChanged = { [weak self] newQty in
+                self?.viewModel.updateCartQuantity(productId: product.id, quantity: newQty)
             }
             return cell
         }
@@ -67,8 +72,12 @@ final class CatalogViewController: UIViewController {
         viewModel.loadProducts()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.refreshCartQuantities()
+    }
+
     private func setupUI() {
-        title = Constants.TabBar.catalogTitle
         view.backgroundColor = UIColor.App.background
         navigationItem.largeTitleDisplayMode = .always
 
@@ -129,11 +138,12 @@ final class CatalogViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        viewModel.$addedToCartMessage
-            .compactMap { $0 }
+        viewModel.$cartQuantities
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] message in
-                self?.showToast(message)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                let snapshot = dataSource.snapshot()
+                dataSource.applySnapshotUsingReloadData(snapshot)
             }
             .store(in: &cancellables)
     }
