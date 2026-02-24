@@ -23,6 +23,7 @@ final class CartViewModel {
                 let items = try await cartService.getCartItems()
                 cartItems = items
                 recalculate()
+                persist()
             } catch {
                 let stored = cartStorage.load()
                 cartItems = stored

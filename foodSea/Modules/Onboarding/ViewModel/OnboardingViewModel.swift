@@ -23,10 +23,9 @@ final class OnboardingViewModel: ObservableObject {
         completeOnboarding()
     }
 
-    nonisolated func completeOnboarding() {
-        UserDefaults.standard.set(true, forKey: Constants.Onboarding.shownKey)
-        MainActor.assumeIsolated {
-            onComplete?()
-        }
+    func completeOnboarding() {
+        let key = Constants.Onboarding.shownKey
+        UserDefaults.standard.set(true, forKey: key)
+        onComplete?()
     }
 }

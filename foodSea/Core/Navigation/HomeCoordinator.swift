@@ -31,6 +31,9 @@ final class HomeCoordinator: Coordinator {
         catalogVC.onScannerTapped = { [weak self] in
             self?.showBarcodeScanner()
         }
+        catalogVC.onVoiceTapped = { [weak self] in
+            self?.showVoiceInput()
+        }
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.viewControllers = [catalogVC]
     }
@@ -55,6 +58,22 @@ final class HomeCoordinator: Coordinator {
             self?.showProductDetail(product)
         }
         navigationController.pushViewController(searchVC, animated: true)
+    }
+
+    private func showVoiceInput() {
+        let viewModel = VoiceInputViewModel(
+            voiceService: container.voiceService,
+            cartService: container.cartService
+        )
+        let voiceVC = VoiceInputViewController(viewModel: viewModel)
+        let navVC = UINavigationController(rootViewController: voiceVC)
+        voiceVC.onAddedToCart = { [weak navVC] in
+            navVC?.dismiss(animated: true)
+        }
+        voiceVC.onClose = { [weak navVC] in
+            navVC?.dismiss(animated: true)
+        }
+        navigationController.present(navVC, animated: true)
     }
 
     private func showBarcodeScanner() {

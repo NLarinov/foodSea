@@ -7,6 +7,7 @@ final class CatalogViewController: UIViewController {
     var onProductSelected: ((Product) -> Void)?
     var onSearchTapped: (() -> Void)?
     var onScannerTapped: (() -> Void)?
+    var onVoiceTapped: (() -> Void)?
 
     private let viewModel: CatalogViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -71,12 +72,19 @@ final class CatalogViewController: UIViewController {
         view.backgroundColor = UIColor.App.background
         navigationItem.largeTitleDisplayMode = .always
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
+        let scannerButton = UIBarButtonItem(
             image: UIImage(systemName: "barcode.viewfinder"),
             style: .plain,
             target: self,
             action: #selector(scannerTapped)
         )
+        let voiceButton = UIBarButtonItem(
+            image: UIImage(systemName: "mic.fill"),
+            style: .plain,
+            target: self,
+            action: #selector(voiceTapped)
+        )
+        navigationItem.rightBarButtonItems = [scannerButton, voiceButton]
 
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.placeholder = Constants.Strings.emptySearchMessage
@@ -182,6 +190,10 @@ final class CatalogViewController: UIViewController {
 
     @objc private func scannerTapped() {
         onScannerTapped?()
+    }
+
+    @objc private func voiceTapped() {
+        onVoiceTapped?()
     }
 }
 

@@ -6,6 +6,8 @@ final class AppCoordinator {
     let tabBarController = UITabBarController()
     var childCoordinators: [Coordinator] = []
 
+    private let cartTabIndex = 2
+
     init(window: UIWindow, container: DIContainer) {
         self.window = window
         self.container = container
@@ -36,6 +38,7 @@ final class AppCoordinator {
 
         showOnboardingIfNeeded()
         setupNotifications(ordersCoordinator: ordersCoordinator)
+        observeCartChanges()
     }
 
     private func showOnboardingIfNeeded() {
@@ -59,6 +62,19 @@ final class AppCoordinator {
         NotificationManager.shared.onOrderTapped = { [weak self] orderId in
             self?.tabBarController.selectedIndex = 3
             ordersCoordinator.showOrderDetail(orderId: orderId)
+        }
+    }
+
+    private func observeCartChanges() {
+        NotificationCenter.default.addObserver(
+            forName: MockCartService.cartDidChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            guard let self else { return }
+            let count = notification.userInfo?[MockCartService.cartItemCountKey] as? Int ?? 0
+            let badgeValue = count > 0 ? "\(count)" : nil
+            tabBarController.viewControllers?[cartTabIndex].tabBarItem.badgeValue = badgeValue
         }
     }
 }

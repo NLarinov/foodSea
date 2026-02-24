@@ -7,22 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AF8841F185C40B85F4C4317D /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DB6443DB2418113B5F691EA /* OnboardingViewController.swift */; };
-		E7FE474897B60D10E691FC56 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AA4BDCBBECC6467A527B97 /* OnboardingViewModel.swift */; };
-		EE8647A3A50568567756F130 /* OnboardingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20974CE6A03CFDC1ACDE9AF9 /* OnboardingPageView.swift */; };
-		70C9BE7B7C7D4FD4B8847A8B /* CatalogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FEB79EA12641B9A55C64B3 /* CatalogViewModel.swift */; };
-		923872D71A7E4FFD97836E8B /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0AAAAF56884EFC9B325E17 /* ProductCell.swift */; };
-		DD9602E6494E4D5B84B63EA7 /* CatalogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD74390F75C64A6EB16652CC /* CatalogViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		20974CE6A03CFDC1ACDE9AF9 /* OnboardingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OnboardingPageView.swift; path = foodSea/Modules/Onboarding/View/OnboardingPageView.swift; sourceTree = SOURCE_ROOT; };
 		7FEFEA072F32B4EB0029252A /* foodSea.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = foodSea.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		98AA4BDCBBECC6467A527B97 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OnboardingViewModel.swift; path = foodSea/Modules/Onboarding/ViewModel/OnboardingViewModel.swift; sourceTree = SOURCE_ROOT; };
-		9DB6443DB2418113B5F691EA /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OnboardingViewController.swift; path = foodSea/Modules/Onboarding/View/OnboardingViewController.swift; sourceTree = SOURCE_ROOT; };
-		72FEB79EA12641B9A55C64B3 /* CatalogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CatalogViewModel.swift; path = foodSea/Modules/Catalog/ViewModel/CatalogViewModel.swift; sourceTree = SOURCE_ROOT; };
-		6C0AAAAF56884EFC9B325E17 /* ProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProductCell.swift; path = foodSea/Modules/Catalog/View/ProductCell.swift; sourceTree = SOURCE_ROOT; };
-		BD74390F75C64A6EB16652CC /* CatalogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CatalogViewController.swift; path = foodSea/Modules/Catalog/View/CatalogViewController.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -55,12 +43,6 @@
 			children = (
 				7FEFEA092F32B4EB0029252A /* foodSea */,
 				7FEFEA082F32B4EB0029252A /* Products */,
-				98AA4BDCBBECC6467A527B97 /* OnboardingViewModel.swift */,
-				20974CE6A03CFDC1ACDE9AF9 /* OnboardingPageView.swift */,
-				9DB6443DB2418113B5F691EA /* OnboardingViewController.swift */,
-				72FEB79EA12641B9A55C64B3 /* CatalogViewModel.swift */,
-				6C0AAAAF56884EFC9B325E17 /* ProductCell.swift */,
-				BD74390F75C64A6EB16652CC /* CatalogViewController.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -146,12 +128,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7FE474897B60D10E691FC56 /* OnboardingViewModel.swift in Sources */,
-				EE8647A3A50568567756F130 /* OnboardingPageView.swift in Sources */,
-				AF8841F185C40B85F4C4317D /* OnboardingViewController.swift in Sources */,
-				70C9BE7B7C7D4FD4B8847A8B /* CatalogViewModel.swift in Sources */,
-				923872D71A7E4FFD97836E8B /* ProductCell.swift in Sources */,
-				DD9602E6494E4D5B84B63EA7 /* CatalogViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,10 +151,6 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(SRCROOT)/foodSea/Modules/Onboarding/ViewModel",
-					"$(SRCROOT)/foodSea/Modules/Onboarding/View",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.foodSea;
@@ -210,10 +182,6 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(SRCROOT)/foodSea/Modules/Onboarding/ViewModel",
-					"$(SRCROOT)/foodSea/Modules/Onboarding/View",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.foodSea;

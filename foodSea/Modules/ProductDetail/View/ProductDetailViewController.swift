@@ -363,6 +363,8 @@ final class ProductDetailViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] quantity in
                 self?.quantityLabel.text = "\(quantity)"
+                self?.decrementButton.isEnabled = quantity > Constants.Cart.minQuantity
+                self?.incrementButton.isEnabled = quantity < Constants.Cart.maxQuantity
             }
             .store(in: &cancellables)
 

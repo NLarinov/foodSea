@@ -1,6 +1,9 @@
 import Foundation
 
 final class MockCartService: CartServiceProtocol, @unchecked Sendable {
+    static let cartDidChangeNotification = Notification.Name("MockCartServiceCartDidChange")
+    static let cartItemCountKey = "cartItemCount"
+
     private var items: [CartItem] = []
 
     func getCartItems() async throws -> [CartItem] {
@@ -16,6 +19,7 @@ final class MockCartService: CartServiceProtocol, @unchecked Sendable {
             let item = CartItem(id: UUID().uuidString, product: product, quantity: quantity)
             items.append(item)
         }
+        postCartChange()
     }
 
     func updateItemQuantity(itemId: String, quantity: Int) async throws {
@@ -25,15 +29,27 @@ final class MockCartService: CartServiceProtocol, @unchecked Sendable {
         } else if let index = items.firstIndex(where: { $0.id == itemId }) {
             items[index].quantity = min(quantity, Constants.Cart.maxQuantity)
         }
+        postCartChange()
     }
 
     func removeItem(itemId: String) async throws {
         try await Task.sleep(nanoseconds: Constants.Mock.shortDelay)
         items.removeAll { $0.id == itemId }
+        postCartChange()
     }
 
     func clearCart() async throws {
         try await Task.sleep(nanoseconds: Constants.Mock.shortDelay)
         items.removeAll()
+        postCartChange()
+    }
+
+    private func postCartChange() {
+        let count = items.reduce(0) { $0 + $1.quantity }
+        NotificationCenter.default.post(
+            name: Self.cartDidChangeNotification,
+            object: nil,
+            userInfo: [Self.cartItemCountKey: count]
+        )
     }
 }

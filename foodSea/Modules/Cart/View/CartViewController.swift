@@ -199,6 +199,7 @@ final class CartViewController: UIViewController {
                 self?.tableView.isHidden = empty
                 self?.bottomBar.isHidden = empty
                 self?.navigationItem.rightBarButtonItem?.isHidden = empty
+                self?.optimizeButton.isEnabled = !empty
             }
             .store(in: &cancellables)
 
