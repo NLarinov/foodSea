@@ -67,12 +67,12 @@ final class AppCoordinator {
 
     private func observeCartChanges() {
         NotificationCenter.default.addObserver(
-            forName: MockCartService.cartDidChangeNotification,
+            forName: .cartDidChange,
             object: nil,
             queue: .main
         ) { [weak self] notification in
             guard let self else { return }
-            let count = notification.userInfo?[MockCartService.cartItemCountKey] as? Int ?? 0
+            let count = notification.userInfo?[Constants.Cart.itemCountKey] as? Int ?? 0
             let badgeValue = count > 0 ? "\(count)" : nil
             tabBarController.viewControllers?[cartTabIndex].tabBarItem.badgeValue = badgeValue
         }

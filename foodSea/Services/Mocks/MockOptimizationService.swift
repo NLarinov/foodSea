@@ -59,6 +59,7 @@ final class MockOptimizationService: OptimizationServiceProtocol, @unchecked Sen
         }
 
         return OptimizationResult(
+            id: UUID().uuidString,
             totalCost: totalItemsCost,
             deliveryCost: totalDelivery,
             savings: savings,

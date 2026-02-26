@@ -1,6 +1,7 @@
 import Foundation
 
 struct OptimizationResult: Codable, Sendable {
+    let id: String
     let totalCost: Decimal
     let deliveryCost: Decimal
     let savings: Decimal

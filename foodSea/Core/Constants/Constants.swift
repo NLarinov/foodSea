@@ -2,7 +2,9 @@ import Foundation
 
 enum Constants {
     enum API {
-        static let baseURL = "https://api.foodsea.com/v1"
+        static let coreBaseURL = "http://localhost:8081"
+        static let optimizationBaseURL = "http://localhost:8082"
+        static let orderingBaseURL = "http://localhost:8083"
         static let timeoutInterval: TimeInterval = 10
         static let itemsPerPage = 20
     }
@@ -57,6 +59,7 @@ enum Constants {
         static let maxQuantity = 99
         static let minQuantity = 1
         static let storageKey = "foodsea_cart_items"
+        static let itemCountKey = "cartItemCount"
     }
 
     enum Onboarding {

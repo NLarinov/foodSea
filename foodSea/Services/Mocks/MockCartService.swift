@@ -1,9 +1,6 @@
 import Foundation
 
 final class MockCartService: CartServiceProtocol, @unchecked Sendable {
-    static let cartDidChangeNotification = Notification.Name("MockCartServiceCartDidChange")
-    static let cartItemCountKey = "cartItemCount"
-
     private var items: [CartItem] = []
     private let storage = CartStorage()
 
@@ -52,9 +49,9 @@ final class MockCartService: CartServiceProtocol, @unchecked Sendable {
     private func postCartChange() {
         let count = items.reduce(0) { $0 + $1.quantity }
         NotificationCenter.default.post(
-            name: Self.cartDidChangeNotification,
+            name: .cartDidChange,
             object: nil,
-            userInfo: [Self.cartItemCountKey: count]
+            userInfo: [Constants.Cart.itemCountKey: count]
         )
     }
 }
