@@ -21,13 +21,13 @@ final class NetworkClient: @unchecked Sendable {
     func request<T: Decodable>(_ endpoint: APIEndpoint) async throws -> T {
         let req = buildRequest(for: endpoint)
         let (data, response) = try await performRequest(req)
-        let http = response as! HTTPURLResponse
+        guard let http = response as? HTTPURLResponse else { throw AppError.networkError }
 
         if http.statusCode == 401 {
             try await refresh()
             let retried = buildRequest(for: endpoint)
             let (retryData, retryResponse) = try await performRequest(retried)
-            let retryHttp = retryResponse as! HTTPURLResponse
+            guard let retryHttp = retryResponse as? HTTPURLResponse else { throw AppError.networkError }
             if retryHttp.statusCode == 401 {
                 handleSessionExpiry()
                 throw AppError.unauthorized
@@ -41,13 +41,13 @@ final class NetworkClient: @unchecked Sendable {
     func requestEmpty(_ endpoint: APIEndpoint) async throws {
         let req = buildRequest(for: endpoint)
         let (_, response) = try await performRequest(req)
-        let http = response as! HTTPURLResponse
+        guard let http = response as? HTTPURLResponse else { throw AppError.networkError }
 
         if http.statusCode == 401 {
             try await refresh()
             let retried = buildRequest(for: endpoint)
             let (_, retryResponse) = try await performRequest(retried)
-            let retryHttp = retryResponse as! HTTPURLResponse
+            guard let retryHttp = retryResponse as? HTTPURLResponse else { throw AppError.networkError }
             if retryHttp.statusCode == 401 {
                 handleSessionExpiry()
                 throw AppError.unauthorized
@@ -121,10 +121,12 @@ final class NetworkClient: @unchecked Sendable {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .iso8601
-        if let envelope = try? decoder.decode(APIResponse<TokenPairDTO>.self, from: data),
-           let pair = envelope.data {
-            tokenStore.save(access: pair.accessToken, refresh: pair.refreshToken)
+        guard let envelope = try? decoder.decode(APIResponse<TokenPairDTO>.self, from: data),
+              let pair = envelope.data else {
+            handleSessionExpiry()
+            throw AppError.unauthorized
         }
+        tokenStore.save(access: pair.accessToken, refresh: pair.refreshToken)
     }
 
     private func handleSessionExpiry() {

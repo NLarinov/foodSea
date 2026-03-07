@@ -20,7 +20,8 @@ final class AuthViewModel: ObservableObject {
     }
 
     func submit() {
-        Task {
+        Task { [weak self] in
+            guard let self else { return }
             isLoading = true
             errorMessage = nil
             do {

@@ -123,10 +123,12 @@ extension APIEndpoint {
     }
 
     func url(baseURL: String) -> URL {
-        var components = URLComponents(string: baseURL + path)!
+        guard var components = URLComponents(string: baseURL + path) else {
+            return URL(string: "http://localhost")!
+        }
         if !queryItems.isEmpty {
             components.queryItems = queryItems
         }
-        return components.url!
+        return components.url ?? URL(string: baseURL)!
     }
 }
