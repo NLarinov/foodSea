@@ -6,6 +6,15 @@ private func kopecksToDecimal(_ kopecks: Int64) -> Decimal {
     Decimal(kopecks) / 100
 }
 
+private func remapImageURL(_ urlString: String?) -> URL? {
+    guard let urlString else { return nil }
+    let remapped = urlString.replacingOccurrences(
+        of: Constants.API.minioInternalPrefix,
+        with: Constants.API.minioPublicURL
+    )
+    return URL(string: remapped)
+}
+
 // MARK: - Category / Store / Offer
 
 extension CategoryBriefDTO {
@@ -43,7 +52,7 @@ extension ProductDetailDTO {
             description: description ?? "",
             brand: brand?.name ?? "",
             category: category.toDomain(),
-            imageURL: imageUrl.flatMap { URL(string: $0) },
+            imageURL: remapImageURL(imageUrl),
             barcode: barcode,
             prices: offers.map { $0.toPriceEntry() },
             isAvailable: inStock
@@ -72,7 +81,7 @@ extension ProductBriefDTO {
             description: "",
             brand: "",
             category: Category(id: "", name: "", iconName: nil),
-            imageURL: imageUrl.flatMap { URL(string: $0) },
+            imageURL: remapImageURL(imageUrl),
             barcode: nil,
             prices: prices,
             isAvailable: inStock
@@ -96,7 +105,7 @@ extension SearchResultItemDTO {
             description: "",
             brand: brandId ?? "",
             category: Category(id: categoryId, name: "", iconName: nil),
-            imageURL: imageUrl.flatMap { URL(string: $0) },
+            imageURL: remapImageURL(imageUrl),
             barcode: barcode,
             prices: [priceEntry],
             isAvailable: inStock

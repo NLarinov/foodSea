@@ -2,9 +2,12 @@ import Foundation
 
 enum Constants {
     enum API {
-        static let coreBaseURL = "http://localhost:8081"
-        static let optimizationBaseURL = "http://localhost:8082"
-        static let orderingBaseURL = "http://localhost:8083"
+        private static let gatewayURL = "http://dev.111.88.159.219.nip.io"
+        static let coreBaseURL = gatewayURL
+        static let optimizationBaseURL = gatewayURL
+        static let orderingBaseURL = gatewayURL
+        static let minioInternalPrefix = "http://localhost:9000"
+        static let minioPublicURL = gatewayURL
         static let timeoutInterval: TimeInterval = 10
         static let itemsPerPage = 20
     }

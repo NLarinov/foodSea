@@ -8,6 +8,19 @@
 	<string>Микрофон используется для голосового ввода списка продуктов</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Распознавание речи используется для голосового ввода товаров</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>111.88.159.219.nip.io</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UIApplicationSceneManifest</key>
