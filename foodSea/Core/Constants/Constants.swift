@@ -2,7 +2,7 @@ import Foundation
 
 enum Constants {
     enum API {
-        private static let gatewayURL = "http://dev.111.88.159.219.nip.io"
+        private static let gatewayURL = "https://foodsea-app.ru"
         static let coreBaseURL = gatewayURL
         static let optimizationBaseURL = gatewayURL
         static let orderingBaseURL = gatewayURL
