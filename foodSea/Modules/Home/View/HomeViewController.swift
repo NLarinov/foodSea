@@ -387,6 +387,20 @@ extension HomeViewController: UICollectionViewDelegate {
             onProductSelected?(product)
         }
     }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        guard SectionKind(rawValue: indexPath.section) == .products,
+              viewModel.selectedCategory == nil else { return }
+        let snapshot = dataSource.snapshot()
+        let itemCount = snapshot.numberOfItems(inSection: .products)
+        if indexPath.item >= itemCount - Constants.API.itemsPerPage / 2 {
+            viewModel.loadNextPage()
+        }
+    }
 }
 
 extension HomeViewController: UISearchBarDelegate {

@@ -14,6 +14,8 @@ final class HomeViewModel {
 
     private let productService: any ProductServiceProtocol
     private let cartService: any CartServiceProtocol
+    private var currentPage = 1
+    private var hasMorePages = true
 
     nonisolated init(productService: any ProductServiceProtocol, cartService: any CartServiceProtocol) {
         self.productService = productService
@@ -21,13 +23,39 @@ final class HomeViewModel {
     }
 
     func loadProducts() {
+        currentPage = 1
+        hasMorePages = true
+        products = []
+        applyFilter()
+        fetchPage()
+        refreshCartQuantities()
+    }
+
+    func loadNextPage() {
+        guard !isLoading, hasMorePages else { return }
+        fetchPage()
+    }
+
+    private func fetchPage() {
         isLoading = true
         Task {
             do {
-                let fetched = try await productService.fetchProducts(page: 0, perPage: Constants.API.itemsPerPage)
-                products = fetched
-                applyFilter()
-                refreshCartQuantities()
+                let fetched = try await productService.fetchProducts(
+                    page: currentPage,
+                    perPage: Constants.API.itemsPerPage
+                )
+                if fetched.count < Constants.API.itemsPerPage {
+                    hasMorePages = false
+                }
+                let existingIds = Set(products.map(\.id))
+                let newItems = fetched.filter { !existingIds.contains($0.id) }
+                if newItems.isEmpty {
+                    hasMorePages = false
+                } else {
+                    products.append(contentsOf: newItems)
+                    applyFilter()
+                }
+                currentPage += 1
             } catch {
                 self.error = error as? AppError ?? .unknown(error.localizedDescription)
             }

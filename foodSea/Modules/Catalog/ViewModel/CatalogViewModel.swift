@@ -9,7 +9,7 @@ final class CatalogViewModel {
 
     private let productService: any ProductServiceProtocol
     private let cartService: any CartServiceProtocol
-    private var currentPage = 0
+    private var currentPage = 1
     private var hasMorePages = true
 
     nonisolated init(productService: any ProductServiceProtocol, cartService: any CartServiceProtocol) {
@@ -18,7 +18,7 @@ final class CatalogViewModel {
     }
 
     func loadProducts() {
-        currentPage = 0
+        currentPage = 1
         hasMorePages = true
         products = []
         fetchPage()
@@ -90,7 +90,13 @@ final class CatalogViewModel {
                 if fetched.count < Constants.API.itemsPerPage {
                     hasMorePages = false
                 }
-                products.append(contentsOf: fetched)
+                let existingIds = Set(products.map(\.id))
+                let newItems = fetched.filter { !existingIds.contains($0.id) }
+                if newItems.isEmpty {
+                    hasMorePages = false
+                } else {
+                    products.append(contentsOf: newItems)
+                }
                 currentPage += 1
             } catch {
                 self.error = error as? AppError ?? .unknown(error.localizedDescription)

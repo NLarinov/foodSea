@@ -7,6 +7,13 @@ final class ProductCell: UICollectionViewCell {
     var onQuantityChanged: ((Int) -> Void)?
 
     private var currentQuantity = 0
+    private var currentImageURL: URL?
+    private var imageTask: URLSessionDataTask?
+    private static let imageCache: NSCache<NSURL, UIImage> = {
+        let cache = NSCache<NSURL, UIImage>()
+        cache.countLimit = 200
+        return cache
+    }()
 
     private let imageView: UIImageView = {
         let iv = UIImageView()
@@ -105,6 +112,9 @@ final class ProductCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        imageTask?.cancel()
+        imageTask = nil
+        currentImageURL = nil
         imageView.image = UIImage(systemName: "photo")
         nameLabel.text = nil
         priceLabel.text = nil
@@ -128,6 +138,32 @@ final class ProductCell: UICollectionViewCell {
 
         currentQuantity = quantity
         updateQuantityUI()
+        loadImage(from: product.imageURL)
+    }
+
+    private func loadImage(from url: URL?) {
+        imageTask?.cancel()
+        imageTask = nil
+        currentImageURL = url
+        guard let url else {
+            imageView.image = UIImage(systemName: "photo")
+            return
+        }
+        if let cached = Self.imageCache.object(forKey: url as NSURL) {
+            imageView.image = cached
+            return
+        }
+        imageView.image = UIImage(systemName: "photo")
+        let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let self, let data, let image = UIImage(data: data) else { return }
+            Self.imageCache.setObject(image, forKey: url as NSURL)
+            DispatchQueue.main.async {
+                guard self.currentImageURL == url else { return }
+                self.imageView.image = image
+            }
+        }
+        imageTask = task
+        task.resume()
     }
 
     private func updateQuantityUI() {
