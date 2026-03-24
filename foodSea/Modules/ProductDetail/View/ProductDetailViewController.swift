@@ -22,18 +22,15 @@ final class ProductDetailViewController: UIViewController {
         return indicator
     }()
 
-    private let productImageView: UIView = {
-        let container = UIView()
-        container.backgroundColor = UIColor.App.secondaryBackground
-        container.layer.cornerRadius = Constants.UI.cornerRadius
-        container.clipsToBounds = true
-        let icon = UIImageView(image: UIImage(systemName: "photo.fill"))
-        icon.tintColor = UIColor.App.secondary
-        icon.contentMode = .scaleAspectFit
-        container.addSubview(icon)
-        icon.centerInSuperview()
-        icon.setSize(width: Constants.UI.thumbnailSize, height: Constants.UI.thumbnailSize)
-        return container
+    private let productImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.backgroundColor = UIColor.App.secondaryBackground
+        iv.layer.cornerRadius = Constants.UI.cornerRadius
+        iv.clipsToBounds = true
+        iv.contentMode = .scaleAspectFit
+        iv.tintColor = UIColor.App.secondary
+        iv.image = UIImage(systemName: "photo.fill")
+        return iv
     }()
 
     private let nameLabel: UILabel = {
@@ -83,7 +80,8 @@ final class ProductDetailViewController: UIViewController {
 
     private let priceTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
-        table.isScrollEnabled = false
+        table.isScrollEnabled = true
+        table.alwaysBounceVertical = true
         table.separatorInset = UIEdgeInsets(
             top: 0,
             left: Constants.UI.separatorInset,
@@ -189,6 +187,15 @@ final class ProductDetailViewController: UIViewController {
         viewModel.loadSimilarProducts()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let navBarHeight = navigationController?.navigationBar.frame.height ?? 0
+        let inset = UIEdgeInsets(top: -navBarHeight, left: 0, bottom: 0, right: 0)
+        if additionalSafeAreaInsets != inset {
+            additionalSafeAreaInsets = inset
+        }
+    }
+
     private func setupUI() {
         view.backgroundColor = UIColor.App.background
 
@@ -206,7 +213,10 @@ final class ProductDetailViewController: UIViewController {
         ])
 
         productImageView.translatesAutoresizingMaskIntoConstraints = false
-        productImageView.heightAnchor.constraint(equalToConstant: Constants.UI.productImageHeight).isActive = true
+        productImageView.heightAnchor.constraint(
+            equalTo: productImageView.widthAnchor,
+            multiplier: Constants.UI.productImageAspectRatio
+        ).isActive = true
 
         let infoStack = UIStackView(arrangedSubviews: [nameLabel, brandLabel, categoryLabel, descriptionLabel, barcodeLabel])
         infoStack.axis = .vertical
@@ -393,12 +403,13 @@ final class ProductDetailViewController: UIViewController {
     }
 
     private func updateUI(with product: Product) {
-        title = product.name
+        navigationItem.title = nil
         nameLabel.text = product.name
         brandLabel.text = product.brand
         categoryLabel.text = product.category.name
         descriptionLabel.text = product.description
         barcodeLabel.text = product.barcode
+        productImageView.setRemoteImage(product.imageURL, placeholderSymbol: "photo.fill")
 
         addToCartButton.isEnabled = product.isAvailable
         addToCartButton.alpha = product.isAvailable ? 1 : 0.5
@@ -410,7 +421,9 @@ final class ProductDetailViewController: UIViewController {
 
     private func updateTableHeight() {
         priceTableView.layoutIfNeeded()
-        priceTableHeightConstraint?.constant = priceTableView.contentSize.height
+        let content = priceTableView.contentSize.height
+        let capped = min(content, Constants.UI.priceTableMaxHeight)
+        priceTableHeightConstraint?.constant = capped
     }
 }
 

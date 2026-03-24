@@ -21,6 +21,8 @@ final class ProductCell: UICollectionViewCell {
         iv.image = UIImage(systemName: "photo")
         iv.tintColor = UIColor.App.secondary
         iv.clipsToBounds = true
+        iv.layer.cornerRadius = Constants.UI.cornerRadius
+        iv.backgroundColor = UIColor.App.background
         return iv
     }()
 
@@ -54,9 +56,12 @@ final class ProductCell: UICollectionViewCell {
 
     private let addButton: UIButton = {
         let button = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: Constants.UI.tabBarIconSize, weight: .medium)
-        button.setImage(UIImage(systemName: "cart.badge.plus", withConfiguration: config), for: .normal)
-        button.tintColor = UIColor.App.primary
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
+        button.setImage(UIImage(systemName: "cart.badge.plus", withConfiguration: symbolConfig), for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = UIColor.App.primary
+        button.layer.cornerRadius = Constants.UI.cornerRadius
+        button.clipsToBounds = true
         return button
     }()
 
@@ -207,7 +212,7 @@ final class ProductCell: UICollectionViewCell {
         quantityContainer.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalToConstant: Constants.UI.thumbnailSize),
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
 
             stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.UI.smallPadding),
             stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.UI.smallPadding),
@@ -218,17 +223,17 @@ final class ProductCell: UICollectionViewCell {
             promotionBadge.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.UI.minimumTapSize),
             promotionBadge.heightAnchor.constraint(equalToConstant: Constants.UI.largePadding),
 
-            addButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.UI.smallPadding),
-            addButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.UI.smallPadding),
-            addButton.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.UI.minimumTapSize),
-            addButton.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.UI.minimumTapSize),
+            addButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
+            addButton.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
+            addButton.heightAnchor.constraint(equalToConstant: Constants.UI.minimumTapSize),
+            addButton.widthAnchor.constraint(equalTo: addButton.heightAnchor),
 
-            quantityContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.UI.smallPadding),
-            quantityContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.UI.smallPadding),
+            quantityContainer.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
+            quantityContainer.bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
             quantityContainer.heightAnchor.constraint(equalToConstant: Constants.UI.minimumTapSize - Constants.UI.smallPadding),
             quantityContainer.widthAnchor.constraint(equalToConstant: Constants.UI.thumbnailSize + Constants.UI.largePadding),
 
-            stack.bottomAnchor.constraint(lessThanOrEqualTo: addButton.topAnchor, constant: -Constants.UI.smallPadding),
+            stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.UI.smallPadding),
         ])
 
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)

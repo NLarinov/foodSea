@@ -63,6 +63,13 @@ final class SimilarProductCell: UICollectionViewCell {
         } else {
             priceLabel.text = nil
         }
+        thumbnailIcon.setRemoteImage(product.imageURL)
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        thumbnailIcon.cancelRemoteImage()
+        thumbnailIcon.image = UIImage(systemName: "photo")
     }
 
     private func setupGesture() {
@@ -81,8 +88,13 @@ final class SimilarProductCell: UICollectionViewCell {
         contentView.layer.borderColor = UIColor.App.separator.cgColor
 
         thumbnailView.addSubview(thumbnailIcon)
-        thumbnailIcon.centerInSuperview()
-        thumbnailIcon.setSize(width: Constants.UI.tabBarIconSize, height: Constants.UI.tabBarIconSize)
+        thumbnailIcon.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            thumbnailIcon.topAnchor.constraint(equalTo: thumbnailView.topAnchor),
+            thumbnailIcon.leadingAnchor.constraint(equalTo: thumbnailView.leadingAnchor),
+            thumbnailIcon.trailingAnchor.constraint(equalTo: thumbnailView.trailingAnchor),
+            thumbnailIcon.bottomAnchor.constraint(equalTo: thumbnailView.bottomAnchor),
+        ])
 
         let stack = UIStackView(arrangedSubviews: [thumbnailView, nameLabel, priceLabel])
         stack.axis = .vertical

@@ -6,6 +6,7 @@ struct ProductBriefDTO: Decodable {
     let imageUrl: String?
     let inStock: Bool
     let minPriceKopecks: Int64?
+    let maxDiscountPercent: Int?
     let weight: String?
 }
 

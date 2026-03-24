@@ -1,16 +1,25 @@
 import Foundation
 import Combine
 
+struct PromoBanner: Hashable {
+    let product: Product
+    let title: String
+    let subtitle: String
+    let color: String
+}
+
 final class HomeViewModel {
     @Published var products: [Product] = []
     @Published var filteredProducts: [Product] = []
+    @Published var banners: [PromoBanner] = []
     @Published var isLoading = false
     @Published var error: AppError?
     @Published var cartQuantities: [String: Int] = [:]
     @Published var selectedCategory: String?
 
     let categories = MockData.categories
-    let banners = MockData.promoBanners
+    private let bannerColors = ["systemOrange", "systemBlue", "systemPurple", "systemRed", "systemGreen"]
+    private let bannerLimit = 5
 
     private let productService: any ProductServiceProtocol
     private let cartService: any CartServiceProtocol
@@ -54,6 +63,7 @@ final class HomeViewModel {
                 } else {
                     products.append(contentsOf: newItems)
                     applyFilter()
+                    updateBanners()
                 }
                 currentPage += 1
             } catch {
@@ -110,8 +120,19 @@ final class HomeViewModel {
         cartQuantities[productId] ?? 0
     }
 
-    func product(for bannerId: String) -> Product? {
-        MockData.products.first { $0.id == bannerId }
+    private func updateBanners() {
+        let discounted = products
+            .filter { ($0.maxDiscountPercent ?? 0) > 0 && $0.isAvailable }
+            .sorted { ($0.maxDiscountPercent ?? 0) > ($1.maxDiscountPercent ?? 0) }
+            .prefix(bannerLimit)
+        banners = discounted.enumerated().map { idx, product in
+            PromoBanner(
+                product: product,
+                title: product.name,
+                subtitle: "Скидка \(product.maxDiscountPercent ?? 0)%",
+                color: bannerColors[idx % bannerColors.count]
+            )
+        }
     }
 
     private func applyFilter() {

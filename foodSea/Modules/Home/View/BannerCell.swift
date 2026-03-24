@@ -7,6 +7,7 @@ final class BannerCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: Constants.UI.largeTitleFontSize, weight: .bold)
         label.textColor = .white
+        label.numberOfLines = 2
         return label
     }()
 

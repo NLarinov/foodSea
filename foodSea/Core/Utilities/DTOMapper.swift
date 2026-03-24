@@ -12,7 +12,7 @@ private func remapImageURL(_ urlString: String?) -> URL? {
         of: Constants.API.minioInternalPrefix,
         with: Constants.API.minioPublicURL
     )
-    return URL(string: remapped)
+    return URL(string: remapped, encodingInvalidCharacters: true)
 }
 
 // MARK: - Category / Store / Offer
@@ -84,7 +84,8 @@ extension ProductBriefDTO {
             imageURL: remapImageURL(imageUrl),
             barcode: nil,
             prices: prices,
-            isAvailable: inStock
+            isAvailable: inStock,
+            maxDiscountPercent: maxDiscountPercent
         )
     }
 }
@@ -108,7 +109,8 @@ extension SearchResultItemDTO {
             imageURL: remapImageURL(imageUrl),
             barcode: barcode,
             prices: [priceEntry],
-            isAvailable: inStock
+            isAvailable: inStock,
+            maxDiscountPercent: maxDiscountPercent.map(Int.init)
         )
     }
 }

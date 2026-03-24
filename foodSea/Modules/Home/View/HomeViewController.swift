@@ -194,6 +194,13 @@ final class HomeViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        viewModel.$banners
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.applySnapshot()
+            }
+            .store(in: &cancellables)
+
         viewModel.$isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] loading in
@@ -377,10 +384,8 @@ extension HomeViewController: UICollectionViewDelegate {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         switch item.kind {
         case .banner(let index):
-            let banner = viewModel.banners[index]
-            if let product = viewModel.product(for: banner.productId) {
-                onProductSelected?(product)
-            }
+            guard viewModel.banners.indices.contains(index) else { return }
+            onProductSelected?(viewModel.banners[index].product)
         case .filter(let categoryId, _):
             viewModel.selectCategory(categoryId)
         case .product(let product):

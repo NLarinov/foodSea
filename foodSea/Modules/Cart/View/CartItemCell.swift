@@ -81,6 +81,7 @@ final class CartItemCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        thumbnailView.cancelRemoteImage()
         thumbnailView.image = UIImage(systemName: "photo")
         nameLabel.text = nil
         priceLabel.text = nil
@@ -94,6 +95,7 @@ final class CartItemCell: UITableViewCell {
         currentQuantity = item.quantity
         nameLabel.text = item.product.name
         quantityLabel.text = "\(item.quantity)"
+        thumbnailView.setRemoteImage(item.product.imageURL)
 
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal

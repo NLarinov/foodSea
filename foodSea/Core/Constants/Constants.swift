@@ -20,7 +20,9 @@ enum Constants {
         static let cornerRadius: CGFloat = 12
         static let smallCornerRadius: CGFloat = 8
         static let cellSpacing: CGFloat = 12
-        static let productImageHeight: CGFloat = 200
+        static let productImageHeight: CGFloat = 280
+        static let productImageAspectRatio: CGFloat = 1.0
+        static let priceTableMaxHeight: CGFloat = 260
         static let thumbnailSize: CGFloat = 80
         static let buttonHeight: CGFloat = 50
         static let searchBarHeight: CGFloat = 44
