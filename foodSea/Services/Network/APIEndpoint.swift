@@ -29,6 +29,9 @@ enum APIEndpoint {
     case listOrders
     case getOrder(id: String)
     case placeOrder(optimizationResultId: String)
+
+    // Photo search (core service, multipart)
+    case photoSearch
 }
 
 extension APIEndpoint {
@@ -53,12 +56,13 @@ extension APIEndpoint {
         case .listOrders:                      return "/api/v1/orders"
         case .getOrder(let id):                return "/api/v1/orders/\(id)"
         case .placeOrder:                      return "/api/v1/orders"
+        case .photoSearch:                     return "/api/v1/products/photo-search"
         }
     }
 
     var method: String {
         switch self {
-        case .register, .login, .refresh, .logout, .addToCart, .runOptimization, .placeOrder:
+        case .register, .login, .refresh, .logout, .addToCart, .runOptimization, .placeOrder, .photoSearch:
             return "POST"
         case .updateCartItem:
             return "PUT"

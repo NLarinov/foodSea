@@ -63,4 +63,9 @@ final class MockProductService: ProductServiceProtocol, @unchecked Sendable {
         try await Task.sleep(nanoseconds: Constants.Mock.shortDelay)
         return MockData.products.first(where: { $0.barcode == barcode })
     }
+
+    func searchByPhoto(imageJPEG: Data, ocrText: String, topK: Int) async throws -> Product? {
+        try await Task.sleep(nanoseconds: Constants.Mock.longDelay)
+        return MockData.products.first
+    }
 }

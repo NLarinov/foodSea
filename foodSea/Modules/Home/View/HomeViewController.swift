@@ -6,6 +6,7 @@ final class HomeViewController: UIViewController {
     var onSearchTapped: (() -> Void)?
     var onScannerTapped: (() -> Void)?
     var onVoiceTapped: (() -> Void)?
+    var onPhotoSearchTapped: (() -> Void)?
 
     private let viewModel: HomeViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -124,7 +125,13 @@ final class HomeViewController: UIViewController {
             target: self,
             action: #selector(voiceTapped)
         )
-        navigationItem.rightBarButtonItems = [scannerButton, voiceButton]
+        let photoButton = UIBarButtonItem(
+            image: UIImage(systemName: "camera.fill"),
+            style: .plain,
+            target: self,
+            action: #selector(photoSearchTapped)
+        )
+        navigationItem.rightBarButtonItems = [scannerButton, voiceButton, photoButton]
 
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.placeholder = Constants.Strings.emptySearchMessage
@@ -376,6 +383,10 @@ final class HomeViewController: UIViewController {
 
     @objc private func voiceTapped() {
         onVoiceTapped?()
+    }
+
+    @objc private func photoSearchTapped() {
+        onPhotoSearchTapped?()
     }
 }
 

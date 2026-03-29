@@ -33,6 +33,9 @@ final class HomeCoordinator: Coordinator {
         homeVC.onVoiceTapped = { [weak self] in
             self?.showVoiceInput()
         }
+        homeVC.onPhotoSearchTapped = { [weak self] in
+            self?.showPhotoSearch()
+        }
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.viewControllers = [homeVC]
     }
@@ -73,6 +76,21 @@ final class HomeCoordinator: Coordinator {
             navVC?.dismiss(animated: true)
         }
         navigationController.present(navVC, animated: true)
+    }
+
+    private func showPhotoSearch() {
+        let viewModel = PhotoSearchViewModel(productService: container.productService)
+        let photoVC = PhotoSearchViewController(viewModel: viewModel)
+        photoVC.modalPresentationStyle = .fullScreen
+        photoVC.onProductFound = { [weak self] product in
+            photoVC.dismiss(animated: true) {
+                self?.showProductDetail(product)
+            }
+        }
+        photoVC.onClose = {
+            photoVC.dismiss(animated: true)
+        }
+        navigationController.present(photoVC, animated: true)
     }
 
     private func showBarcodeScanner() {

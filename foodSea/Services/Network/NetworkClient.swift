@@ -38,6 +38,32 @@ final class NetworkClient: @unchecked Sendable {
         return try decode(data, statusCode: http.statusCode)
     }
 
+    func requestMultipart<T: Decodable>(
+        _ endpoint: APIEndpoint,
+        fields: [String: String],
+        file: MultipartFile
+    ) async throws -> T {
+        let boundary = "Boundary-\(UUID().uuidString)"
+        let body = makeMultipartBody(boundary: boundary, fields: fields, file: file)
+        let req = buildMultipartRequest(for: endpoint, boundary: boundary, body: body)
+        let (data, response) = try await performRequest(req)
+        guard let http = response as? HTTPURLResponse else { throw AppError.networkError }
+
+        if http.statusCode == 401 {
+            try await refresh()
+            let retried = buildMultipartRequest(for: endpoint, boundary: boundary, body: body)
+            let (retryData, retryResponse) = try await performRequest(retried)
+            guard let retryHttp = retryResponse as? HTTPURLResponse else { throw AppError.networkError }
+            if retryHttp.statusCode == 401 {
+                handleSessionExpiry()
+                throw AppError.unauthorized
+            }
+            return try decode(retryData, statusCode: retryHttp.statusCode)
+        }
+
+        return try decode(data, statusCode: http.statusCode)
+    }
+
     func requestEmpty(_ endpoint: APIEndpoint) async throws {
         let req = buildRequest(for: endpoint)
         let (_, response) = try await performRequest(req)
@@ -74,6 +100,36 @@ final class NetworkClient: @unchecked Sendable {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         return request
+    }
+
+    private func buildMultipartRequest(for endpoint: APIEndpoint, boundary: String, body: Data) -> URLRequest {
+        var request = URLRequest(url: endpoint.url(baseURL: baseURL))
+        request.httpMethod = endpoint.method
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        request.httpBody = body
+        if endpoint.requiresAuth, let token = tokenStore.accessToken {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        return request
+    }
+
+    private func makeMultipartBody(boundary: String, fields: [String: String], file: MultipartFile) -> Data {
+        var body = Data()
+        let lineBreak = "\r\n"
+
+        for (key, value) in fields {
+            body.append("--\(boundary)\(lineBreak)".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"\(key)\"\(lineBreak)\(lineBreak)".data(using: .utf8)!)
+            body.append("\(value)\(lineBreak)".data(using: .utf8)!)
+        }
+
+        body.append("--\(boundary)\(lineBreak)".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"\(file.field)\"; filename=\"\(file.filename)\"\(lineBreak)".data(using: .utf8)!)
+        body.append("Content-Type: \(file.mimeType)\(lineBreak)\(lineBreak)".data(using: .utf8)!)
+        body.append(file.data)
+        body.append(lineBreak.data(using: .utf8)!)
+        body.append("--\(boundary)--\(lineBreak)".data(using: .utf8)!)
+        return body
     }
 
     private func performRequest(_ request: URLRequest) async throws -> (Data, URLResponse) {

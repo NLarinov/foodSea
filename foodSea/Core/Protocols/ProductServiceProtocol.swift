@@ -6,4 +6,5 @@ protocol ProductServiceProtocol: Sendable {
     func searchProducts(query: String, filters: SearchFilters?) async throws -> [Product]
     func fetchSimilarProducts(productId: String) async throws -> [Product]
     func findByBarcode(_ barcode: String) async throws -> Product?
+    func searchByPhoto(imageJPEG: Data, ocrText: String, topK: Int) async throws -> Product?
 }

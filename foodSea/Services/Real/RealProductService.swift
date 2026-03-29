@@ -40,4 +40,23 @@ final class RealProductService: ProductServiceProtocol, @unchecked Sendable {
             return nil
         }
     }
+
+    func searchByPhoto(imageJPEG: Data, ocrText: String, topK: Int) async throws -> Product? {
+        let file = MultipartFile(
+            field: "image",
+            filename: "photo.jpg",
+            mimeType: "image/jpeg",
+            data: imageJPEG
+        )
+        let response: PhotoSearchResponseDTO = try await coreClient.requestMultipart(
+            .photoSearch,
+            fields: [
+                "ocr_text": ocrText,
+                "top_k": "\(topK)"
+            ],
+            file: file
+        )
+        guard let candidate = response.candidates.first else { return nil }
+        return candidate.product.toDomain(offers: [])
+    }
 }

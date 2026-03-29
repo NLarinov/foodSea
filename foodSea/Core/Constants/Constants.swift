@@ -126,6 +126,26 @@ enum Constants {
         static let manualEntryPlaceholder = "Введите штрихкод"
     }
 
+    enum PhotoSearch {
+        static let topK: Int = 5
+        static let minOCRLength: Int = 3
+        static let maxOCRLength: Int = 4000
+        static let fallbackOCR = "---"
+        static let maxImageBytes: Int = 8 * 1024 * 1024
+        static let targetCompressionBytes: Int = 2 * 1024 * 1024
+        static let initialJPEGQuality: CGFloat = 0.85
+        static let minJPEGQuality: CGFloat = 0.5
+        static let jpegQualityStep: CGFloat = 0.1
+        static let shutterButtonSize: CGFloat = 72
+        static let shutterInnerInset: CGFloat = 6
+        static let controlButtonSize: CGFloat = 44
+        static let hintTopOffset: CGFloat = 32
+        static let bottomPanelHeight: CGFloat = 120
+        static let bottomPanelBackgroundAlpha: CGFloat = 0.5
+        static let hintBackgroundAlpha: CGFloat = 0.4
+        static let resultOverlayAlpha: CGFloat = 0.6
+    }
+
     enum Voice {
         static let micButtonSize: CGFloat = 80
         static let pulseScale: CGFloat = 1.2
@@ -195,5 +215,12 @@ enum Constants {
         static let orderConfirmed = "Заказ оформлен"
         static let toOrders = "К заказам"
         static let toCatalog = "В каталог"
+        static let photoSearchTitle = "Поиск по фото"
+        static let photoSearchHint = "Сфотографируйте товар, и мы найдём его"
+        static let photoSearchGallery = "Из галереи"
+        static let photoSearchTryAgain = "Попробовать снова"
+        static let photoSearchCameraUnavailable = "Камера недоступна"
+        static let photoSearchCameraUnavailableMessage = "Используйте галерею или закройте экран"
+        static let photoSearchProcessing = "Ищем товар…"
     }
 }
