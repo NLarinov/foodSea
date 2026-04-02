@@ -6,11 +6,51 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		72B8ECC62FB23FC10049E724 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B8ECC52FB23FC10049E724 /* WidgetKit.framework */; };
+		72B8ECC82FB23FC10049E724 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B8ECC72FB23FC10049E724 /* SwiftUI.framework */; };
+		72B8ECD72FB23FC20049E724 /* foodSeaWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 72B8ECC32FB23FC10049E724 /* foodSeaWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		72B8ECD52FB23FC20049E724 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7FEFE9FF2F32B4EB0029252A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 72B8ECC22FB23FC10049E724;
+			remoteInfo = foodSeaWidgetsExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		72B8ECDC2FB23FC20049E724 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				72B8ECD72FB23FC20049E724 /* foodSeaWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		72B8ECC32FB23FC10049E724 /* foodSeaWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = foodSeaWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		72B8ECC52FB23FC10049E724 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		72B8ECC72FB23FC10049E724 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		7FEFEA072F32B4EB0029252A /* foodSea.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = foodSea.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		72B8ECDB2FB23FC20049E724 /* Exceptions for "foodSeaWidgets" folder in "foodSeaWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 72B8ECC22FB23FC10049E724 /* foodSeaWidgetsExtension */;
+		};
 		7FEFEA192F32B4ED0029252A /* Exceptions for "foodSea" folder in "foodSea" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -21,6 +61,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		72B8ECC92FB23FC10049E724 /* foodSeaWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				72B8ECDB2FB23FC20049E724 /* Exceptions for "foodSeaWidgets" folder in "foodSeaWidgetsExtension" target */,
+			);
+			path = foodSeaWidgets;
+			sourceTree = "<group>";
+		};
 		7FEFEA092F32B4EB0029252A /* foodSea */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -29,9 +77,23 @@
 			path = foodSea;
 			sourceTree = "<group>";
 		};
+		8EF0E8E185E3471F82C6FF6C /* foodSeaShared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = foodSeaShared;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		72B8ECC02FB23FC10049E724 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				72B8ECC82FB23FC10049E724 /* SwiftUI.framework in Frameworks */,
+				72B8ECC62FB23FC10049E724 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7FEFEA042F32B4EB0029252A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -42,10 +104,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		72B8ECC42FB23FC10049E724 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				72B8ECC52FB23FC10049E724 /* WidgetKit.framework */,
+				72B8ECC72FB23FC10049E724 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		7FEFE9FE2F32B4EB0029252A = {
 			isa = PBXGroup;
 			children = (
 				7FEFEA092F32B4EB0029252A /* foodSea */,
+				8EF0E8E185E3471F82C6FF6C /* foodSeaShared */,
+				72B8ECC92FB23FC10049E724 /* foodSeaWidgets */,
+				72B8ECC42FB23FC10049E724 /* Frameworks */,
 				7FEFEA082F32B4EB0029252A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				7FEFEA072F32B4EB0029252A /* foodSea.app */,
+				72B8ECC32FB23FC10049E724 /* foodSeaWidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,6 +136,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		72B8ECC22FB23FC10049E724 /* foodSeaWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 72B8ECD82FB23FC20049E724 /* Build configuration list for PBXNativeTarget "foodSeaWidgetsExtension" */;
+			buildPhases = (
+				72B8ECBF2FB23FC10049E724 /* Sources */,
+				72B8ECC02FB23FC10049E724 /* Frameworks */,
+				72B8ECC12FB23FC10049E724 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				72B8ECC92FB23FC10049E724 /* foodSeaWidgets */,
+				8EF0E8E185E3471F82C6FF6C /* foodSeaShared */,
+			);
+			name = foodSeaWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = foodSeaWidgetsExtension;
+			productReference = 72B8ECC32FB23FC10049E724 /* foodSeaWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		7FEFEA062F32B4EB0029252A /* foodSea */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7FEFEA1A2F32B4ED0029252A /* Build configuration list for PBXNativeTarget "foodSea" */;
@@ -68,13 +166,16 @@
 				7FEFEA032F32B4EB0029252A /* Sources */,
 				7FEFEA042F32B4EB0029252A /* Frameworks */,
 				7FEFEA052F32B4EB0029252A /* Resources */,
+				72B8ECDC2FB23FC20049E724 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				72B8ECD62FB23FC20049E724 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				7FEFEA092F32B4EB0029252A /* foodSea */,
+				8EF0E8E185E3471F82C6FF6C /* foodSeaShared */,
 			);
 			name = foodSea;
 			packageProductDependencies = (
@@ -90,9 +191,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					72B8ECC22FB23FC10049E724 = {
+						CreatedOnToolsVersion = 26.1;
+					};
 					7FEFEA062F32B4EB0029252A = {
 						CreatedOnToolsVersion = 26.0;
 					};
@@ -113,11 +217,19 @@
 			projectRoot = "";
 			targets = (
 				7FEFEA062F32B4EB0029252A /* foodSea */,
+				72B8ECC22FB23FC10049E724 /* foodSeaWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		72B8ECC12FB23FC10049E724 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7FEFEA052F32B4EB0029252A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -128,6 +240,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		72B8ECBF2FB23FC10049E724 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7FEFEA032F32B4EB0029252A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,7 +256,77 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		72B8ECD62FB23FC20049E724 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 72B8ECC22FB23FC10049E724 /* foodSeaWidgetsExtension */;
+			targetProxy = 72B8ECD52FB23FC20049E724 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		72B8ECD92FB23FC20049E724 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z28TTNTS6L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = foodSeaWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = foodSeaWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.foodSea.foodSeaWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		72B8ECDA2FB23FC20049E724 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z28TTNTS6L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = foodSeaWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = foodSeaWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.foodSea.foodSeaWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		7FEFEA1B2F32B4ED0029252A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -328,6 +517,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		72B8ECD82FB23FC20049E724 /* Build configuration list for PBXNativeTarget "foodSeaWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				72B8ECD92FB23FC20049E724 /* Debug */,
+				72B8ECDA2FB23FC20049E724 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		7FEFEA022F32B4EB0029252A /* Build configuration list for PBXProject "foodSea" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

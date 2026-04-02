@@ -11,6 +11,11 @@ final class DIContainer: @unchecked Sendable {
 
     init(useMocks: Bool = true) {
         self.useMocks = useMocks
+        defer {
+            Task { @MainActor in
+                OrderProgressTracker.shared.configure(orderService: self.orderService)
+            }
+        }
         if useMocks {
             authService = MockAuthService()
             productService = MockProductService()

@@ -25,6 +25,14 @@ final class OrderCheckoutViewModel {
             do {
                 let order = try await orderService.createOrder(from: optimizationResult)
                 createdOrder = order
+                await MainActor.run {
+                    OrderProgressTracker.shared.track(order: order)
+                    NotificationCenter.default.post(
+                        name: .orderDidCreate,
+                        object: nil,
+                        userInfo: [NotificationUserInfoKey.orderId: order.id]
+                    )
+                }
             } catch {
                 self.error = error as? AppError ?? .unknown(error.localizedDescription)
             }

@@ -215,7 +215,7 @@ extension OrderStatus {
         case "confirmed":          self = .confirmed
         case "assembling":         self = .assembling
         case "shipped":            self = .shipped
-        case "in_transit":         self = .inTransit
+        case "in_transit", "in_delivery": self = .inTransit
         case "delivered":          self = .delivered
         case "cancelled":          self = .cancelled
         default:                   self = .pending

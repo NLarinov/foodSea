@@ -157,12 +157,25 @@ enum Constants {
 
     enum Notifications {
         static let orderUpdateTitle = "Обновление заказа"
+        static let orderCreatedTitle = "Заказ оформлен"
+        static let orderCreatedBody = "Мы получили ваш заказ и начинаем обработку"
+        static let orderPendingBody = "Заказ принят, ждём подтверждения магазином"
+        static let orderConfirmedBody = "Магазин подтвердил заказ"
         static let orderDeliveredBody = "Ваш заказ доставлен!"
         static let orderInTransitBody = "Курьер уже в пути"
         static let orderAssemblingBody = "Ваш заказ собирается"
+        static let orderCancelledBody = "Заказ отменён"
         static let localNotificationDelay: TimeInterval = 5
         static let categoryIdentifier = "foodsea_order"
         static let orderIdKey = "order_id"
+    }
+
+    enum OrderTracking {
+        static let pollIntervalSec: Int = 20
+    }
+
+    enum PushTokens {
+        static let apnsTokenKey = "foodsea.apnsToken"
     }
 
     enum Home {

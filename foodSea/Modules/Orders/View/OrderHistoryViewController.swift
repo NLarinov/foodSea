@@ -15,7 +15,14 @@ final class OrderHistoryViewController: UIViewController {
         tv.register(OrderCell.self, forCellReuseIdentifier: OrderCell.reuseIdentifier)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 100
+        tv.refreshControl = refreshControl
         return tv
+    }()
+
+    private lazy var refreshControl: UIRefreshControl = {
+        let rc = UIRefreshControl()
+        rc.addTarget(self, action: #selector(refreshTriggered), for: .valueChanged)
+        return rc
     }()
 
     private lazy var filterScrollView: UIScrollView = {
@@ -68,7 +75,29 @@ final class OrderHistoryViewController: UIViewController {
         setupUI()
         setupFilters()
         bindViewModel()
+        subscribeToOrderUpdates()
         viewModel.loadOrders()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.loadOrders()
+    }
+
+    @objc private func refreshTriggered() {
+        viewModel.loadOrders()
+    }
+
+    private func subscribeToOrderUpdates() {
+        let reload: (Notification) -> Void = { [weak self] _ in
+            DispatchQueue.main.async { self?.viewModel.loadOrders() }
+        }
+        NotificationCenter.default.addObserver(
+            forName: .orderDidCreate, object: nil, queue: .main, using: reload
+        )
+        NotificationCenter.default.addObserver(
+            forName: .orderStatusDidChange, object: nil, queue: .main, using: reload
+        )
     }
 
     private func setupUI() {
@@ -175,6 +204,7 @@ final class OrderHistoryViewController: UIViewController {
                     self?.activityIndicator.startAnimating()
                 } else {
                     self?.activityIndicator.stopAnimating()
+                    self?.refreshControl.endRefreshing()
                 }
             }
             .store(in: &cancellables)
