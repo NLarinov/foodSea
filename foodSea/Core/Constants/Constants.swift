@@ -157,6 +157,18 @@ enum Constants {
         static let subcategoryIconSize: CGFloat = 32
     }
 
+    enum OAuth {
+        static let callbackScheme = "foodsea"
+        static let callbackHost = "oauth"
+        static let callbackPath = "/callback"
+        static let bridgeRedirectURI = "https://foodsea-app.ru/api/v1/auth/oauth/ios-bridge"
+        static let googleProvider = "google"
+        static let yandexProvider = "yandex"
+        static let appleProvider = "apple"
+        static let codeQueryItem = "code"
+        static let stateQueryItem = "state"
+    }
+
     enum Strings {
         static let appName = "FoodSea"
         static let emptyCartMessage = "В корзине пока ничего нет("
@@ -193,5 +205,16 @@ enum Constants {
         static let orderConfirmed = "Заказ оформлен"
         static let toOrders = "К заказам"
         static let toCatalog = "В каталог"
+        static let welcomeSubtitle = "Сэкономьте на покупках"
+        static let signInWithApple = "Войти через Apple"
+        static let signInWithGoogle = "Войти через Google"
+        static let signInWithYandex = "Войти через Yandex"
+        static let signInWithEmail = "Войти по почте"
+        static let orSeparator = "или"
+        static let oauthGenericError = "Не удалось войти. Попробуйте позже."
+        static let oauthProviderNetworkError = "Не удалось подключиться к провайдеру"
+        static let oauthSessionExpiredError = "Сессия истекла, попробуйте снова"
+        static let oauthEmailCollisionError = "Этот email уже привязан к другому способу входа"
+        static let oauthAppleVerificationError = "Не удалось проверить подпись Apple"
     }
 }
