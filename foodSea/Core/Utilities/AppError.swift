@@ -7,6 +7,8 @@ enum AppError: Error, LocalizedError, Sendable {
     case notFound
     case timeout
     case unauthorized
+    case oauthCancelled
+    case oauthFailed(String)
     case unknown(String)
 
     var errorDescription: String? {
@@ -23,6 +25,10 @@ enum AppError: Error, LocalizedError, Sendable {
             "Превышено время ожидания"
         case .unauthorized:
             "Необходима авторизация"
+        case .oauthCancelled:
+            nil
+        case .oauthFailed(let message):
+            message
         case .unknown(let message):
             message
         }
