@@ -6,6 +6,9 @@ enum APIEndpoint {
     case login(email: String, password: String)
     case refresh(token: String)
     case logout
+    case oauthStart(provider: String, redirectURI: String)
+    case oauthCallback(provider: String, code: String, state: String, redirectURI: String)
+    case oauthAppleNative(identityToken: String, fullName: String?, email: String?)
 
     // Products (core service)
     case listProducts(page: Int, perPage: Int)
@@ -38,6 +41,9 @@ extension APIEndpoint {
         case .login:                           return "/api/v1/auth/login"
         case .refresh:                         return "/api/v1/auth/refresh"
         case .logout:                          return "/api/v1/auth/logout"
+        case .oauthStart(let provider, _):     return "/api/v1/auth/oauth/\(provider)/start"
+        case .oauthCallback(let provider, _, _, _): return "/api/v1/auth/oauth/\(provider)/callback"
+        case .oauthAppleNative:                return "/api/v1/auth/oauth/apple/native-callback"
         case .listProducts:                    return "/api/v1/products"
         case .getProduct(let id):              return "/api/v1/products/\(id)"
         case .getProductByBarcode(let code):   return "/api/v1/products/barcode/\(code)"
@@ -58,7 +64,8 @@ extension APIEndpoint {
 
     var method: String {
         switch self {
-        case .register, .login, .refresh, .logout, .addToCart, .runOptimization, .placeOrder:
+        case .register, .login, .refresh, .logout, .addToCart, .runOptimization, .placeOrder,
+             .oauthCallback, .oauthAppleNative:
             return "POST"
         case .updateCartItem:
             return "PUT"
@@ -71,7 +78,7 @@ extension APIEndpoint {
 
     var requiresAuth: Bool {
         switch self {
-        case .register, .login, .refresh:
+        case .register, .login, .refresh, .oauthStart, .oauthCallback, .oauthAppleNative:
             return false
         default:
             return true
@@ -94,6 +101,10 @@ extension APIEndpoint {
             return try? encoder.encode(UpdateItemRequestDTO(quantity: Int16(quantity)))
         case .placeOrder(let id):
             return try? encoder.encode(PlaceOrderRequestDTO(optimizationResultId: id))
+        case .oauthCallback(_, let code, let state, let redirectURI):
+            return try? encoder.encode(OAuthCallbackRequestDTO(code: code, state: state, redirectUri: redirectURI))
+        case .oauthAppleNative(let token, let fullName, let email):
+            return try? encoder.encode(OAuthAppleNativeRequestDTO(identityToken: token, fullName: fullName, email: email))
         default:
             return nil
         }
@@ -117,6 +128,8 @@ extension APIEndpoint {
                 items.append(URLQueryItem(name: "max_price", value: "\(kopecks)"))
             }
             return items
+        case .oauthStart(_, let redirectURI):
+            return [URLQueryItem(name: "redirect_uri", value: redirectURI)]
         default:
             return []
         }
