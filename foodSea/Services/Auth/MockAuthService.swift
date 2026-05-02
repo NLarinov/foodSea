@@ -13,6 +13,21 @@ final class MockAuthService: AuthServiceProtocol, @unchecked Sendable {
         isLoggedIn = true
     }
 
+    func signInWithGoogle() async throws {
+        try await Task.sleep(nanoseconds: Constants.Mock.mediumDelay)
+        isLoggedIn = true
+    }
+
+    func signInWithYandex() async throws {
+        try await Task.sleep(nanoseconds: Constants.Mock.mediumDelay)
+        isLoggedIn = true
+    }
+
+    func signInWithApple() async throws {
+        try await Task.sleep(nanoseconds: Constants.Mock.shortDelay)
+        isLoggedIn = true
+    }
+
     func logout() async throws {
         try await Task.sleep(nanoseconds: Constants.Mock.shortDelay)
         isLoggedIn = false
