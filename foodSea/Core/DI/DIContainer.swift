@@ -32,7 +32,8 @@ final class DIContainer: @unchecked Sendable {
                 refreshBaseURL: coreURL,
                 tokenStore: tokenStore
             )
-            authService = RealAuthService(client: coreClient, tokenStore: tokenStore)
+            let oauthService = RealOAuthService(client: coreClient)
+            authService = RealAuthService(client: coreClient, tokenStore: tokenStore, oauthService: oauthService)
             productService = RealProductService(coreClient: coreClient, optClient: optClient)
             cartService = RealCartService(client: coreClient)
             optimizationService = RealOptimizationService(client: optClient)
