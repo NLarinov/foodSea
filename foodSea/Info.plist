@@ -10,6 +10,17 @@
 	<string>Распознавание речи используется для голосового ввода товаров</string>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>me.foodSea.oauth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>foodsea</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
