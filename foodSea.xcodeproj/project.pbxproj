@@ -7,31 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1D21D44A8CC59E5F433726CA /* OAuthDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8638058C2FCE3DD4CCCB985D /* OAuthDTO.swift */; };
-		3E6EF31BD91B80BE085DAD81 /* OAuthServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984640D2F7FB77038EDD34E3 /* OAuthServiceProtocol.swift */; };
-		4D7D451FDA9F5C4EBDA457E9 /* OAuthError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBE8A37F06E4F144E2C7918 /* OAuthError.swift */; };
-		5E93180C713518050DCFAD95 /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF6EA253C667CB294C49664 /* WelcomeViewModel.swift */; };
 		614572335AAC3C8F45EB0A95 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35FD1B03B8EB12B11AF1DF65 /* AuthenticationServices.framework */; };
-		8BEA9552F616B5285B3A01EB /* MockOAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6003FE0DF0437BF8408FD0C /* MockOAuthService.swift */; };
-		C9E8CB522005C4B182E19BF4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E556BFCEAE6BB650EAC188 /* WelcomeViewController.swift */; };
-		D28FCF5FC7CDCEB90B4C576F /* YandexAuthorizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF07185641D88CBE50BA01AE /* YandexAuthorizing.swift */; };
-		DB4A804E6F80E918AE7ED72D /* RealOAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB581B6EB0081181B7ADFBB9 /* RealOAuthService.swift */; };
-		DDFF4D5FF67CC5A695B22998 /* RealYandexAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D66A3C9AAA25CFB7350767 /* RealYandexAuthorizer.swift */; };
+		CBCF79879ABA7017B8DF6A16 /* YandexLoginSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D4DA345CAA310CEE807B1CE6 /* YandexLoginSDK */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		35FD1B03B8EB12B11AF1DF65 /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
 		7FEFEA072F32B4EB0029252A /* foodSea.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = foodSea.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8153E87218DA721BA08E6126 /* foodSea.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = foodSea.entitlements; sourceTree = "<group>"; };
-		8638058C2FCE3DD4CCCB985D /* OAuthDTO.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthDTO.swift; sourceTree = "<group>"; };
-		984640D2F7FB77038EDD34E3 /* OAuthServiceProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthServiceProtocol.swift; sourceTree = "<group>"; };
-		AEF6EA253C667CB294C49664 /* WelcomeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
-		B6003FE0DF0437BF8408FD0C /* MockOAuthService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockOAuthService.swift; sourceTree = "<group>"; };
-		BB581B6EB0081181B7ADFBB9 /* RealOAuthService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RealOAuthService.swift; sourceTree = "<group>"; };
-		BEBE8A37F06E4F144E2C7918 /* OAuthError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthError.swift; sourceTree = "<group>"; };
-		C5D66A3C9AAA25CFB7350767 /* RealYandexAuthorizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RealYandexAuthorizer.swift; sourceTree = "<group>"; };
-		E0E556BFCEAE6BB650EAC188 /* WelcomeViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
-		EF07185641D88CBE50BA01AE /* YandexAuthorizing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YandexAuthorizing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -61,21 +44,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				614572335AAC3C8F45EB0A95 /* AuthenticationServices.framework in Frameworks */,
+				CBCF79879ABA7017B8DF6A16 /* YandexLoginSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		324463EB8ECAB690518FB60B /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				66AF4099247DFE5FB922BEC9 /* DTO */,
-			);
-			name = Models;
-			path = Models;
-			sourceTree = "<group>";
-		};
 		49F0C291FFFB74019B92D4ED /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -87,45 +62,10 @@
 		56A2422FC30FCA2B2CD2796E /* foodSea */ = {
 			isa = PBXGroup;
 			children = (
-				324463EB8ECAB690518FB60B /* Models */,
-				68256CBEB323E5AF96152C31 /* Services */,
-				9F2AF35C01AFDE78483ADD6B /* Modules */,
 				8153E87218DA721BA08E6126 /* foodSea.entitlements */,
 			);
 			name = foodSea;
 			path = foodSea;
-			sourceTree = "<group>";
-		};
-		66AF4099247DFE5FB922BEC9 /* DTO */ = {
-			isa = PBXGroup;
-			children = (
-				8638058C2FCE3DD4CCCB985D /* OAuthDTO.swift */,
-			);
-			name = DTO;
-			path = DTO;
-			sourceTree = "<group>";
-		};
-		678FC8428DBCE8864DEFE4CC /* OAuth */ = {
-			isa = PBXGroup;
-			children = (
-				BEBE8A37F06E4F144E2C7918 /* OAuthError.swift */,
-				984640D2F7FB77038EDD34E3 /* OAuthServiceProtocol.swift */,
-				B6003FE0DF0437BF8408FD0C /* MockOAuthService.swift */,
-				BB581B6EB0081181B7ADFBB9 /* RealOAuthService.swift */,
-				EF07185641D88CBE50BA01AE /* YandexAuthorizing.swift */,
-				C5D66A3C9AAA25CFB7350767 /* RealYandexAuthorizer.swift */,
-			);
-			name = OAuth;
-			path = OAuth;
-			sourceTree = "<group>";
-		};
-		68256CBEB323E5AF96152C31 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				678FC8428DBCE8864DEFE4CC /* OAuth */,
-			);
-			name = Services;
-			path = Services;
 			sourceTree = "<group>";
 		};
 		7FEFE9FE2F32B4EB0029252A = {
@@ -144,25 +84,6 @@
 				7FEFEA072F32B4EB0029252A /* foodSea.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		9F2AF35C01AFDE78483ADD6B /* Modules */ = {
-			isa = PBXGroup;
-			children = (
-				FC6FF0B93EB917D53C0ECD95 /* Auth */,
-			);
-			name = Modules;
-			path = Modules;
-			sourceTree = "<group>";
-		};
-		FC6FF0B93EB917D53C0ECD95 /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				AEF6EA253C667CB294C49664 /* WelcomeViewModel.swift */,
-				E0E556BFCEAE6BB650EAC188 /* WelcomeViewController.swift */,
-			);
-			name = Auth;
-			path = Auth;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -184,6 +105,9 @@
 				7FEFEA092F32B4EB0029252A /* foodSea */,
 			);
 			name = foodSea;
+			packageProductDependencies = (
+				D4DA345CAA310CEE807B1CE6 /* YandexLoginSDK */,
+			);
 			productName = foodSea;
 			productReference = 7FEFEA072F32B4EB0029252A /* foodSea.app */;
 			productType = "com.apple.product-type.application";
@@ -212,6 +136,9 @@
 			);
 			mainGroup = 7FEFE9FE2F32B4EB0029252A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				94BA723CEE2046FAB65224E1 /* XCRemoteSwiftPackageReference "yandex-login-sdk-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7FEFEA082F32B4EB0029252A /* Products */;
 			projectDirPath = "";
@@ -237,15 +164,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D21D44A8CC59E5F433726CA /* OAuthDTO.swift in Sources */,
-				4D7D451FDA9F5C4EBDA457E9 /* OAuthError.swift in Sources */,
-				3E6EF31BD91B80BE085DAD81 /* OAuthServiceProtocol.swift in Sources */,
-				8BEA9552F616B5285B3A01EB /* MockOAuthService.swift in Sources */,
-				DB4A804E6F80E918AE7ED72D /* RealOAuthService.swift in Sources */,
-				5E93180C713518050DCFAD95 /* WelcomeViewModel.swift in Sources */,
-				C9E8CB522005C4B182E19BF4 /* WelcomeViewController.swift in Sources */,
-				D28FCF5FC7CDCEB90B4C576F /* YandexAuthorizing.swift in Sources */,
-				DDFF4D5FF67CC5A695B22998 /* RealYandexAuthorizer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,6 +381,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		94BA723CEE2046FAB65224E1 /* XCRemoteSwiftPackageReference "yandex-login-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yandexmobile/yandex-login-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D4DA345CAA310CEE807B1CE6 /* YandexLoginSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 94BA723CEE2046FAB65224E1 /* XCRemoteSwiftPackageReference "yandex-login-sdk-ios" */;
+			productName = YandexLoginSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7FEFE9FF2F32B4EB0029252A /* Project object */;
 }

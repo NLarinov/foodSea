@@ -168,13 +168,10 @@ enum Constants {
         static let codeQueryItem = "code"
         static let stateQueryItem = "state"
 
-        // FILL_ME: Yandex OAuth client_id (тот же, что выставлен в core-config YANDEX_CLIENT_ID).
-        // foodsea://oauth/callback должен быть добавлен в Redirect URI этого приложения в Yandex OAuth.
+        // FILL_ME: Yandex OAuth client_id (тот же, что в core-config YANDEX_CLIENT_ID).
+        // После заполнения зарегистрируй в Info.plist URL scheme "yx<client_id>" —
+        // SDK использует её для callback'а при SSO через установленные Yandex-приложения.
         static let yandexClientID = ""
-        static let yandexAuthorizeURL = "https://oauth.yandex.ru/authorize"
-        static let yandexResponseType = "token"
-        static let yandexAccessTokenFragmentKey = "access_token"
-        static let yandexErrorFragmentKey = "error"
     }
 
     enum Strings {
