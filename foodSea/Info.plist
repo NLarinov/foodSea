@@ -20,6 +20,14 @@
 				<string>foodsea</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>me.foodSea.google</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.259399812185-c4akbau1v1hi9hdkmqdc5eiue64mh2p1</string>
+			</array>
+		</dict>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

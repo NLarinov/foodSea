@@ -32,7 +32,8 @@ final class DIContainer: @unchecked Sendable {
                 refreshBaseURL: coreURL,
                 tokenStore: tokenStore
             )
-            let oauthService = RealOAuthService(client: coreClient)
+            let yandexAuthorizer = StubYandexAuthorizer()
+            let oauthService = RealOAuthService(client: coreClient, yandexAuthorizer: yandexAuthorizer)
             authService = RealAuthService(client: coreClient, tokenStore: tokenStore, oauthService: oauthService)
             productService = RealProductService(coreClient: coreClient, optClient: optClient)
             cartService = RealCartService(client: coreClient)

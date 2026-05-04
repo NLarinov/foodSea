@@ -14,6 +14,7 @@
 		614572335AAC3C8F45EB0A95 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35FD1B03B8EB12B11AF1DF65 /* AuthenticationServices.framework */; };
 		8BEA9552F616B5285B3A01EB /* MockOAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6003FE0DF0437BF8408FD0C /* MockOAuthService.swift */; };
 		C9E8CB522005C4B182E19BF4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E556BFCEAE6BB650EAC188 /* WelcomeViewController.swift */; };
+		D28FCF5FC7CDCEB90B4C576F /* YandexAuthorizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF07185641D88CBE50BA01AE /* YandexAuthorizing.swift */; };
 		DB4A804E6F80E918AE7ED72D /* RealOAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB581B6EB0081181B7ADFBB9 /* RealOAuthService.swift */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 		BB581B6EB0081181B7ADFBB9 /* RealOAuthService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RealOAuthService.swift; sourceTree = "<group>"; };
 		BEBE8A37F06E4F144E2C7918 /* OAuthError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthError.swift; sourceTree = "<group>"; };
 		E0E556BFCEAE6BB650EAC188 /* WelcomeViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
+		EF07185641D88CBE50BA01AE /* YandexAuthorizing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YandexAuthorizing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -108,6 +110,7 @@
 				984640D2F7FB77038EDD34E3 /* OAuthServiceProtocol.swift */,
 				B6003FE0DF0437BF8408FD0C /* MockOAuthService.swift */,
 				BB581B6EB0081181B7ADFBB9 /* RealOAuthService.swift */,
+				EF07185641D88CBE50BA01AE /* YandexAuthorizing.swift */,
 			);
 			name = OAuth;
 			path = OAuth;
@@ -238,6 +241,7 @@
 				DB4A804E6F80E918AE7ED72D /* RealOAuthService.swift in Sources */,
 				5E93180C713518050DCFAD95 /* WelcomeViewModel.swift in Sources */,
 				C9E8CB522005C4B182E19BF4 /* WelcomeViewController.swift in Sources */,
+				D28FCF5FC7CDCEB90B4C576F /* YandexAuthorizing.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

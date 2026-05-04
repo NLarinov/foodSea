@@ -16,3 +16,7 @@ struct OAuthAppleNativeRequestDTO: Encodable {
     let fullName: String?
     let email: String?
 }
+
+struct OAuthYandexSDKCallbackRequestDTO: Encodable {
+    let accessToken: String
+}

@@ -4,11 +4,13 @@ import UIKit
 
 final class RealOAuthService: NSObject, OAuthServiceProtocol, @unchecked Sendable {
     private let client: NetworkClient
+    private let yandexAuthorizer: YandexAuthorizing
     private var currentWebSession: ASWebAuthenticationSession?
     private var currentApplePresentationProvider: ApplePresentationProvider?
 
-    init(client: NetworkClient) {
+    init(client: NetworkClient, yandexAuthorizer: YandexAuthorizing) {
         self.client = client
+        self.yandexAuthorizer = yandexAuthorizer
         super.init()
     }
 
@@ -17,11 +19,19 @@ final class RealOAuthService: NSObject, OAuthServiceProtocol, @unchecked Sendabl
     }
 
     func signInWithYandex() async throws -> AuthResponseDTO {
-        try await runWebOAuth(provider: Constants.OAuth.yandexProvider)
+        let accessToken = try await yandexAuthorizer.requestAccessToken()
+        do {
+            let response: AuthResponseDTO = try await client.request(
+                .oauthYandexSDKCallback(accessToken: accessToken)
+            )
+            return response
+        } catch let appError as AppError {
+            throw OAuthError.backendFailure(appError)
+        }
     }
 
     private func runWebOAuth(provider: String) async throws -> AuthResponseDTO {
-        let redirectURI = Constants.OAuth.bridgeRedirectURI
+        let redirectURI = Constants.OAuth.nativeRedirectURI
 
         let startResponse: OAuthStartResponseDTO
         do {

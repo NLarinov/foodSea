@@ -161,7 +161,7 @@ enum Constants {
         static let callbackScheme = "foodsea"
         static let callbackHost = "oauth"
         static let callbackPath = "/callback"
-        static let bridgeRedirectURI = "https://foodsea-app.ru/api/v1/auth/oauth/ios-bridge"
+        static let nativeRedirectURI = "foodsea://oauth/callback"
         static let googleProvider = "google"
         static let yandexProvider = "yandex"
         static let appleProvider = "apple"

@@ -9,6 +9,7 @@ enum APIEndpoint {
     case oauthStart(provider: String, redirectURI: String)
     case oauthCallback(provider: String, code: String, state: String, redirectURI: String)
     case oauthAppleNative(identityToken: String, fullName: String?, email: String?)
+    case oauthYandexSDKCallback(accessToken: String)
 
     // Products (core service)
     case listProducts(page: Int, perPage: Int)
@@ -41,9 +42,10 @@ extension APIEndpoint {
         case .login:                           return "/api/v1/auth/login"
         case .refresh:                         return "/api/v1/auth/refresh"
         case .logout:                          return "/api/v1/auth/logout"
-        case .oauthStart(let provider, _):     return "/api/v1/auth/oauth/\(provider)/start"
-        case .oauthCallback(let provider, _, _, _): return "/api/v1/auth/oauth/\(provider)/callback"
-        case .oauthAppleNative:                return "/api/v1/auth/oauth/apple/native-callback"
+        case .oauthStart(let provider, _):     return "/api/v1/auth/oauth/native/\(provider)/start"
+        case .oauthCallback(let provider, _, _, _): return "/api/v1/auth/oauth/native/\(provider)/callback"
+        case .oauthAppleNative:                return "/api/v1/auth/oauth/native/apple/callback"
+        case .oauthYandexSDKCallback:          return "/api/v1/auth/oauth/native/yandex/sdk/callback"
         case .listProducts:                    return "/api/v1/products"
         case .getProduct(let id):              return "/api/v1/products/\(id)"
         case .getProductByBarcode(let code):   return "/api/v1/products/barcode/\(code)"
@@ -65,7 +67,7 @@ extension APIEndpoint {
     var method: String {
         switch self {
         case .register, .login, .refresh, .logout, .addToCart, .runOptimization, .placeOrder,
-             .oauthCallback, .oauthAppleNative:
+             .oauthCallback, .oauthAppleNative, .oauthYandexSDKCallback:
             return "POST"
         case .updateCartItem:
             return "PUT"
@@ -78,7 +80,8 @@ extension APIEndpoint {
 
     var requiresAuth: Bool {
         switch self {
-        case .register, .login, .refresh, .oauthStart, .oauthCallback, .oauthAppleNative:
+        case .register, .login, .refresh,
+             .oauthStart, .oauthCallback, .oauthAppleNative, .oauthYandexSDKCallback:
             return false
         default:
             return true
@@ -105,6 +108,8 @@ extension APIEndpoint {
             return try? encoder.encode(OAuthCallbackRequestDTO(code: code, state: state, redirectUri: redirectURI))
         case .oauthAppleNative(let token, let fullName, let email):
             return try? encoder.encode(OAuthAppleNativeRequestDTO(identityToken: token, fullName: fullName, email: email))
+        case .oauthYandexSDKCallback(let accessToken):
+            return try? encoder.encode(OAuthYandexSDKCallbackRequestDTO(accessToken: accessToken))
         default:
             return nil
         }
