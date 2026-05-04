@@ -168,10 +168,7 @@ enum Constants {
         static let codeQueryItem = "code"
         static let stateQueryItem = "state"
 
-        // FILL_ME: Yandex OAuth client_id (тот же, что в core-config YANDEX_CLIENT_ID).
-        // После заполнения зарегистрируй в Info.plist URL scheme "yx<client_id>" —
-        // SDK использует её для callback'а при SSO через установленные Yandex-приложения.
-        static let yandexClientID = ""
+        static let yandexClientID = "5e1277d1b081410fac11d4282663d2a4"
     }
 
     enum Strings {

@@ -28,6 +28,14 @@
 				<string>com.googleusercontent.apps.259399812185-c4akbau1v1hi9hdkmqdc5eiue64mh2p1</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>me.foodSea.yandex</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>yx5e1277d1b081410fac11d4282663d2a4</string>
+			</array>
+		</dict>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
