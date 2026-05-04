@@ -16,6 +16,7 @@
 		C9E8CB522005C4B182E19BF4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E556BFCEAE6BB650EAC188 /* WelcomeViewController.swift */; };
 		D28FCF5FC7CDCEB90B4C576F /* YandexAuthorizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF07185641D88CBE50BA01AE /* YandexAuthorizing.swift */; };
 		DB4A804E6F80E918AE7ED72D /* RealOAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB581B6EB0081181B7ADFBB9 /* RealOAuthService.swift */; };
+		DDFF4D5FF67CC5A695B22998 /* RealYandexAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D66A3C9AAA25CFB7350767 /* RealYandexAuthorizer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		B6003FE0DF0437BF8408FD0C /* MockOAuthService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MockOAuthService.swift; sourceTree = "<group>"; };
 		BB581B6EB0081181B7ADFBB9 /* RealOAuthService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RealOAuthService.swift; sourceTree = "<group>"; };
 		BEBE8A37F06E4F144E2C7918 /* OAuthError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthError.swift; sourceTree = "<group>"; };
+		C5D66A3C9AAA25CFB7350767 /* RealYandexAuthorizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RealYandexAuthorizer.swift; sourceTree = "<group>"; };
 		E0E556BFCEAE6BB650EAC188 /* WelcomeViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		EF07185641D88CBE50BA01AE /* YandexAuthorizing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YandexAuthorizing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,6 +113,7 @@
 				B6003FE0DF0437BF8408FD0C /* MockOAuthService.swift */,
 				BB581B6EB0081181B7ADFBB9 /* RealOAuthService.swift */,
 				EF07185641D88CBE50BA01AE /* YandexAuthorizing.swift */,
+				C5D66A3C9AAA25CFB7350767 /* RealYandexAuthorizer.swift */,
 			);
 			name = OAuth;
 			path = OAuth;
@@ -242,6 +245,7 @@
 				5E93180C713518050DCFAD95 /* WelcomeViewModel.swift in Sources */,
 				C9E8CB522005C4B182E19BF4 /* WelcomeViewController.swift in Sources */,
 				D28FCF5FC7CDCEB90B4C576F /* YandexAuthorizing.swift in Sources */,
+				DDFF4D5FF67CC5A695B22998 /* RealYandexAuthorizer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
