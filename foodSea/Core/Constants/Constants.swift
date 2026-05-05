@@ -131,6 +131,11 @@ enum Constants {
         static let confidenceBarHeight: CGFloat = 4
         static let maxRecordingDuration: TimeInterval = 30
         static let recordingTimerInterval: TimeInterval = 0.1
+        static let locale: String = "ru-RU"
+        static let appleLocaleIdentifier: String = "ru_RU"
+        static let partialTextDebounce: TimeInterval = 0.15
+        static let unitFallback: String = "шт"
+        static let stopGraceNanoseconds: UInt64 = 200_000_000
     }
 
     enum Notifications {
