@@ -1,4 +1,5 @@
 import Foundation
+import YandexLoginSDK
 
 final class DIContainer: @unchecked Sendable {
     let useMocks: Bool
@@ -37,7 +38,12 @@ final class DIContainer: @unchecked Sendable {
                 refreshBaseURL: coreURL,
                 tokenStore: tokenStore
             )
-            authService = RealAuthService(client: coreClient, tokenStore: tokenStore)
+            if !Constants.OAuth.yandexClientID.isEmpty {
+                try? YandexLoginSDK.shared.activate(with: Constants.OAuth.yandexClientID)
+            }
+            let yandexAuthorizer = RealYandexAuthorizer()
+            let oauthService = RealOAuthService(client: coreClient, yandexAuthorizer: yandexAuthorizer)
+            authService = RealAuthService(client: coreClient, tokenStore: tokenStore, oauthService: oauthService)
             productService = RealProductService(coreClient: coreClient, optClient: optClient)
             cartService = RealCartService(client: coreClient)
             optimizationService = RealOptimizationService(client: optClient)

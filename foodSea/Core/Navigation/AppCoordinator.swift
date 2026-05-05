@@ -60,12 +60,27 @@ final class AppCoordinator {
 
     private func showAuth(animated: Bool) {
         childCoordinators = []
-        let vm = AuthViewModel(authService: container.authService)
-        vm.onSuccess = { [weak self] in
-            self?.showMain()
+        let welcomeVM = WelcomeViewModel(authService: container.authService)
+        let nav: UINavigationController
+        weak var weakSelf = self
+        weak var weakNav: UINavigationController?
+
+        welcomeVM.onSuccess = {
+            weakSelf?.showMain()
         }
-        let authVC = AuthViewController(viewModel: vm)
-        let nav = UINavigationController(rootViewController: authVC)
+        welcomeVM.onContinueWithEmail = {
+            guard let strongSelf = weakSelf else { return }
+            let authVM = AuthViewModel(authService: strongSelf.container.authService)
+            authVM.onSuccess = {
+                weakSelf?.showMain()
+            }
+            let authVC = AuthViewController(viewModel: authVM)
+            weakNav?.pushViewController(authVC, animated: true)
+        }
+
+        let welcomeVC = WelcomeViewController(viewModel: welcomeVM)
+        nav = UINavigationController(rootViewController: welcomeVC)
+        weakNav = nav
 
         if animated, let snapshot = window.snapshotView(afterScreenUpdates: false) {
             nav.view.addSubview(snapshot)

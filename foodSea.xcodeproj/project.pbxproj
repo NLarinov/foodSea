@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		614572335AAC3C8F45EB0A95 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35FD1B03B8EB12B11AF1DF65 /* AuthenticationServices.framework */; };
 		72B8ECC62FB23FC10049E724 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B8ECC52FB23FC10049E724 /* WidgetKit.framework */; };
 		72B8ECC82FB23FC10049E724 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B8ECC72FB23FC10049E724 /* SwiftUI.framework */; };
 		72B8ECD72FB23FC20049E724 /* foodSeaWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 72B8ECC32FB23FC10049E724 /* foodSeaWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CBCF79879ABA7017B8DF6A16 /* YandexLoginSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D4DA345CAA310CEE807B1CE6 /* YandexLoginSDK */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,10 +39,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		35FD1B03B8EB12B11AF1DF65 /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
 		72B8ECC32FB23FC10049E724 /* foodSeaWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = foodSeaWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		72B8ECC52FB23FC10049E724 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		72B8ECC72FB23FC10049E724 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		7FEFEA072F32B4EB0029252A /* foodSea.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = foodSea.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8153E87218DA721BA08E6126 /* foodSea.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = foodSea.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -98,12 +102,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				614572335AAC3C8F45EB0A95 /* AuthenticationServices.framework in Frameworks */,
+				CBCF79879ABA7017B8DF6A16 /* YandexLoginSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		49F0C291FFFB74019B92D4ED /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				35FD1B03B8EB12B11AF1DF65 /* AuthenticationServices.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		56A2422FC30FCA2B2CD2796E /* foodSea */ = {
+			isa = PBXGroup;
+			children = (
+				8153E87218DA721BA08E6126 /* foodSea.entitlements */,
+			);
+			name = foodSea;
+			path = foodSea;
+			sourceTree = "<group>";
+		};
 		72B8ECC42FB23FC10049E724 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +144,8 @@
 				72B8ECC92FB23FC10049E724 /* foodSeaWidgets */,
 				72B8ECC42FB23FC10049E724 /* Frameworks */,
 				7FEFEA082F32B4EB0029252A /* Products */,
+				56A2422FC30FCA2B2CD2796E /* foodSea */,
+				49F0C291FFFB74019B92D4ED /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -179,6 +204,7 @@
 			);
 			name = foodSea;
 			packageProductDependencies = (
+				D4DA345CAA310CEE807B1CE6 /* YandexLoginSDK */,
 			);
 			productName = foodSea;
 			productReference = 7FEFEA072F32B4EB0029252A /* foodSea.app */;
@@ -211,6 +237,9 @@
 			);
 			mainGroup = 7FEFE9FE2F32B4EB0029252A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				94BA723CEE2046FAB65224E1 /* XCRemoteSwiftPackageReference "yandex-login-sdk-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7FEFEA082F32B4EB0029252A /* Products */;
 			projectDirPath = "";
@@ -332,6 +361,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = foodSea/foodSea.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z28TTNTS6L;
@@ -365,6 +395,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = foodSea/foodSea.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z28TTNTS6L;
@@ -545,6 +576,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		94BA723CEE2046FAB65224E1 /* XCRemoteSwiftPackageReference "yandex-login-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yandexmobile/yandex-login-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D4DA345CAA310CEE807B1CE6 /* YandexLoginSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 94BA723CEE2046FAB65224E1 /* XCRemoteSwiftPackageReference "yandex-login-sdk-ios" */;
+			productName = YandexLoginSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7FEFE9FF2F32B4EB0029252A /* Project object */;
 }
