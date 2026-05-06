@@ -29,6 +29,9 @@ enum APIEndpoint {
     case listOrders
     case getOrder(id: String)
     case placeOrder(optimizationResultId: String)
+
+    // Voice (core service)
+    case parseVoice(text: String, locale: String)
 }
 
 extension APIEndpoint {
@@ -53,12 +56,13 @@ extension APIEndpoint {
         case .listOrders:                      return "/api/v1/orders"
         case .getOrder(let id):                return "/api/v1/orders/\(id)"
         case .placeOrder:                      return "/api/v1/orders"
+        case .parseVoice:                      return "/api/v1/voice/parse"
         }
     }
 
     var method: String {
         switch self {
-        case .register, .login, .refresh, .logout, .addToCart, .runOptimization, .placeOrder:
+        case .register, .login, .refresh, .logout, .addToCart, .runOptimization, .placeOrder, .parseVoice:
             return "POST"
         case .updateCartItem:
             return "PUT"
@@ -94,6 +98,8 @@ extension APIEndpoint {
             return try? encoder.encode(UpdateItemRequestDTO(quantity: Int16(quantity)))
         case .placeOrder(let id):
             return try? encoder.encode(PlaceOrderRequestDTO(optimizationResultId: id))
+        case .parseVoice(let text, let locale):
+            return try? encoder.encode(ParseVoiceRequestDTO(text: text, locale: locale))
         default:
             return nil
         }
@@ -131,4 +137,9 @@ extension APIEndpoint {
         }
         return components.url ?? URL(string: baseURL)!
     }
+}
+
+struct ParseVoiceRequestDTO: Encodable, Sendable {
+    let text: String
+    let locale: String
 }
