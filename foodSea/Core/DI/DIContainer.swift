@@ -44,11 +44,12 @@ final class DIContainer: @unchecked Sendable {
             let yandexAuthorizer = RealYandexAuthorizer()
             let oauthService = RealOAuthService(client: coreClient, yandexAuthorizer: yandexAuthorizer)
             authService = RealAuthService(client: coreClient, tokenStore: tokenStore, oauthService: oauthService)
-            productService = RealProductService(coreClient: coreClient, optClient: optClient)
+            let realProductService = RealProductService(coreClient: coreClient, optClient: optClient)
+            productService = realProductService
             cartService = RealCartService(client: coreClient)
             optimizationService = RealOptimizationService(client: optClient)
             orderService = RealOrderService(client: ordClient)
-            voiceService = MockVoiceService()
+            voiceService = RealVoiceService(coreClient: coreClient, productService: realProductService)
         }
     }
 }

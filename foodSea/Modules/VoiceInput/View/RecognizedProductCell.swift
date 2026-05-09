@@ -7,6 +7,7 @@ final class RecognizedProductCell: UITableViewCell {
     var onRemove: (() -> Void)?
 
     private var currentQuantity = 1
+    private var currentUnit: String = Constants.Voice.unitFallback
 
     private let productImageView: UIImageView = {
         let iv = UIImageView()
@@ -76,7 +77,8 @@ final class RecognizedProductCell: UITableViewCell {
     func configure(with item: RecognizedProduct) {
         nameLabel.text = item.product.name
         currentQuantity = item.quantity
-        quantityLabel.text = "\(item.quantity)"
+        currentUnit = item.unit
+        quantityLabel.text = "\(item.quantity) \(item.unit)"
         stepper.value = Double(item.quantity)
 
         let confidence = Float(item.confidence)
@@ -135,7 +137,7 @@ final class RecognizedProductCell: UITableViewCell {
     @objc private func stepperChanged() {
         let quantity = Int(stepper.value)
         currentQuantity = quantity
-        quantityLabel.text = "\(quantity)"
+        quantityLabel.text = "\(quantity) \(currentUnit)"
         onQuantityChanged?(quantity)
     }
 

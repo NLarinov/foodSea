@@ -1,5 +1,5 @@
 import Foundation
 
 protocol VoiceServiceProtocol: Sendable {
-    func processAudio(_ data: Data) async throws -> [RecognizedProduct]
+    func parseText(_ text: String, locale: String) async throws -> [RecognizedProduct]
 }

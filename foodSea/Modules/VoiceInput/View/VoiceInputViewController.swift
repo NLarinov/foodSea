@@ -47,6 +47,16 @@ final class VoiceInputViewController: UIViewController {
         return label
     }()
 
+    private let partialTranscriptLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: Constants.UI.subtitleFontSize)
+        label.textColor = UIColor.App.label
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.isHidden = true
+        return label
+    }()
+
     private lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .plain)
         tv.backgroundColor = UIColor.App.background
@@ -118,7 +128,7 @@ final class VoiceInputViewController: UIViewController {
             action: #selector(closeTapped)
         )
 
-        let topStack = UIStackView(arrangedSubviews: [stateLabel, hintLabel, durationLabel])
+        let topStack = UIStackView(arrangedSubviews: [stateLabel, hintLabel, durationLabel, partialTranscriptLabel])
         topStack.axis = .vertical
         topStack.spacing = Constants.UI.smallPadding
         topStack.alignment = .center
@@ -236,8 +246,8 @@ final class VoiceInputViewController: UIViewController {
         switch state {
         case .idle:
             updateIdleState()
-        case .recording:
-            updateRecordingState()
+        case .listening(let partialText):
+            updateListeningState(partialText: partialText)
         case .processing:
             updateProcessingState()
         case .results:
@@ -252,6 +262,7 @@ final class VoiceInputViewController: UIViewController {
         stateLabel.text = Constants.Strings.voiceTitle
         hintLabel.isHidden = false
         durationLabel.isHidden = true
+        partialTranscriptLabel.isHidden = true
         tableView.isHidden = true
         addAllButton.isHidden = true
         retryButton.isHidden = true
@@ -264,10 +275,12 @@ final class VoiceInputViewController: UIViewController {
         micButton.setImage(UIImage(systemName: "mic.fill", withConfiguration: config), for: .normal)
     }
 
-    private func updateRecordingState() {
+    private func updateListeningState(partialText: String) {
         stateLabel.text = Constants.Strings.voiceRecording
         hintLabel.isHidden = true
         durationLabel.isHidden = false
+        partialTranscriptLabel.isHidden = partialText.isEmpty
+        partialTranscriptLabel.text = partialText
         tableView.isHidden = true
         addAllButton.isHidden = true
         retryButton.isHidden = true
@@ -283,6 +296,7 @@ final class VoiceInputViewController: UIViewController {
         stateLabel.text = Constants.Strings.voiceProcessing
         hintLabel.isHidden = true
         durationLabel.isHidden = true
+        partialTranscriptLabel.isHidden = true
         micButton.isHidden = true
         tableView.isHidden = true
         addAllButton.isHidden = true
@@ -295,6 +309,7 @@ final class VoiceInputViewController: UIViewController {
         stateLabel.text = Constants.Strings.voiceTitle
         hintLabel.isHidden = true
         durationLabel.isHidden = true
+        partialTranscriptLabel.isHidden = true
         micButton.isHidden = true
         tableView.isHidden = false
         addAllButton.isHidden = false
@@ -336,7 +351,7 @@ final class VoiceInputViewController: UIViewController {
         switch viewModel.state {
         case .idle, .results, .error:
             viewModel.startRecording()
-        case .recording:
+        case .listening:
             viewModel.stopRecording()
         case .processing:
             break

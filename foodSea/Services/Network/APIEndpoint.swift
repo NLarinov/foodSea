@@ -36,6 +36,9 @@ enum APIEndpoint {
 
     // Photo search (core service, multipart)
     case photoSearch
+
+    // Voice (core service)
+    case parseVoice(text: String, locale: String)
 }
 
 extension APIEndpoint {
@@ -65,13 +68,14 @@ extension APIEndpoint {
         case .getOrder(let id):                return "/api/v1/orders/\(id)"
         case .placeOrder:                      return "/api/v1/orders"
         case .photoSearch:                     return "/api/v1/products/photo-search"
+        case .parseVoice:                      return "/api/v1/voice/parse"
         }
     }
 
     var method: String {
         switch self {
         case .register, .login, .refresh, .logout, .addToCart, .runOptimization, .placeOrder,
-             .photoSearch, .oauthCallback, .oauthAppleNative, .oauthYandexSDKCallback:
+             .photoSearch, .parseVoice, .oauthCallback, .oauthAppleNative, .oauthYandexSDKCallback:
             return "POST"
         case .updateCartItem:
             return "PUT"
@@ -114,6 +118,8 @@ extension APIEndpoint {
             return try? encoder.encode(OAuthAppleNativeRequestDTO(identityToken: token, fullName: fullName, email: email))
         case .oauthYandexSDKCallback(let accessToken):
             return try? encoder.encode(OAuthYandexSDKCallbackRequestDTO(accessToken: accessToken))
+        case .parseVoice(let text, let locale):
+            return try? encoder.encode(ParseVoiceRequestDTO(text: text, locale: locale))
         default:
             return nil
         }
@@ -153,4 +159,9 @@ extension APIEndpoint {
         }
         return components.url ?? URL(string: baseURL)!
     }
+}
+
+struct ParseVoiceRequestDTO: Encodable, Sendable {
+    let text: String
+    let locale: String
 }

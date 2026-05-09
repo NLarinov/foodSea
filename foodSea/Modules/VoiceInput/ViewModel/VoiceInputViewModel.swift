@@ -1,10 +1,9 @@
 import Foundation
 import Combine
-import AVFoundation
 
 enum VoiceInputState: Sendable {
     case idle
-    case recording
+    case listening(partialText: String)
     case processing
     case results
     case error(AppError)
@@ -15,41 +14,51 @@ final class VoiceInputViewModel {
     @Published var recognizedProducts: [RecognizedProduct] = []
     @Published var recordingDuration: TimeInterval = 0
 
+    private let speechRecognizer: SpeechRecognizer
     private let voiceService: any VoiceServiceProtocol
     private let cartService: any CartServiceProtocol
-    private var audioRecorder: AVAudioRecorder?
-    private var recordingTimer: Timer?
-    private var recordingURL: URL?
 
-    nonisolated init(voiceService: any VoiceServiceProtocol, cartService: any CartServiceProtocol) {
+    private var speechCancellable: AnyCancellable?
+    private var durationTimer: Timer?
+    private var sessionStart: Date?
+
+    nonisolated init(
+        voiceService: any VoiceServiceProtocol,
+        cartService: any CartServiceProtocol,
+        speechRecognizer: SpeechRecognizer = SpeechRecognizer()
+    ) {
         self.voiceService = voiceService
         self.cartService = cartService
+        self.speechRecognizer = speechRecognizer
     }
 
     func startRecording() {
-        let session = AVAudioSession.sharedInstance()
-        session.requestRecordPermission { [weak self] granted in
-            Task { @MainActor in
-                if granted {
-                    self?.beginRecording()
-                } else {
-                    self?.state = .error(.unknown("Доступ к микрофону запрещён"))
-                }
+        Task { @MainActor in
+            let granted = await speechRecognizer.requestAuthorization()
+            guard granted else {
+                state = .error(.unknown("Доступ к распознаванию речи запрещён"))
+                return
             }
+            beginListening()
         }
     }
 
     func stopRecording() {
-        audioRecorder?.stop()
-        audioRecorder = nil
-        recordingTimer?.invalidate()
-        recordingTimer = nil
-        processAudio()
+        Task { @MainActor in
+            speechCancellable?.cancel()
+            speechCancellable = nil
+            stopDurationTimer()
+            let finalText = await speechRecognizer.stop()
+            await processFinalText(finalText)
+        }
     }
 
     func updateQuantity(index: Int, quantity: Int) {
         guard recognizedProducts.indices.contains(index) else { return }
-        recognizedProducts[index].quantity = max(Constants.Cart.minQuantity, min(quantity, Constants.Cart.maxQuantity))
+        recognizedProducts[index].quantity = max(
+            Constants.Cart.minQuantity,
+            min(quantity, Constants.Cart.maxQuantity)
+        )
     }
 
     func removeProduct(index: Int) {
@@ -76,66 +85,62 @@ final class VoiceInputViewModel {
         state = .idle
     }
 
-    private func beginRecording() {
+    private func beginListening() {
         do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.record, mode: .default)
-            try session.setActive(true)
+            try speechRecognizer.startStreaming()
         } catch {
             state = .error(.unknown(error.localizedDescription))
             return
         }
 
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent("voice_input.m4a")
-        recordingURL = url
+        recordingDuration = 0
+        sessionStart = Date()
+        state = .listening(partialText: "")
+        startDurationTimer()
 
-        let settings: [String: Any] = [
-            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 44100,
-            AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue,
-        ]
+        speechCancellable = speechRecognizer.partialText
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] text in
+                guard let self else { return }
+                if case .listening = self.state {
+                    self.state = .listening(partialText: text)
+                }
+            }
+    }
 
+    private func processFinalText(_ text: String) async {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            state = .idle
+            return
+        }
+        state = .processing
         do {
-            audioRecorder = try AVAudioRecorder(url: url, settings: settings)
-            audioRecorder?.record()
-            state = .recording
-            recordingDuration = 0
-            startTimer()
+            let items = try await voiceService.parseText(trimmed, locale: Constants.Voice.locale)
+            recognizedProducts = items
+            state = items.isEmpty ? .idle : .results
+        } catch let error as AppError {
+            state = .error(error)
         } catch {
             state = .error(.unknown(error.localizedDescription))
         }
     }
 
-    private func startTimer() {
-        recordingTimer = Timer.scheduledTimer(withTimeInterval: Constants.Voice.recordingTimerInterval, repeats: true) { [weak self] _ in
-            guard let self else { return }
-            self.recordingDuration += Constants.Voice.recordingTimerInterval
+    private func startDurationTimer() {
+        durationTimer = Timer.scheduledTimer(
+            withTimeInterval: Constants.Voice.recordingTimerInterval,
+            repeats: true
+        ) { [weak self] _ in
+            guard let self, let start = self.sessionStart else { return }
+            self.recordingDuration = Date().timeIntervalSince(start)
             if self.recordingDuration >= Constants.Voice.maxRecordingDuration {
                 self.stopRecording()
             }
         }
     }
 
-    private func processAudio() {
-        state = .processing
-        Task {
-            do {
-                let data = (try? Data(contentsOf: recordingURL ?? URL(fileURLWithPath: ""))) ?? Data()
-                let results = try await voiceService.processAudio(data)
-                recognizedProducts = results
-                state = results.isEmpty ? .idle : .results
-            } catch {
-                state = .error(error as? AppError ?? .unknown(error.localizedDescription))
-            }
-            cleanupRecording()
-        }
-    }
-
-    private func cleanupRecording() {
-        if let url = recordingURL {
-            try? FileManager.default.removeItem(at: url)
-        }
-        recordingURL = nil
+    private func stopDurationTimer() {
+        durationTimer?.invalidate()
+        durationTimer = nil
     }
 }
