@@ -2,64 +2,60 @@ import Foundation
 import Combine
 
 final class FilterViewModel {
-    @Published var selectedCategories: Set<String> = []
-    @Published var selectedBrands: Set<String> = []
+    @Published var selectedCategoryId: String?
+    @Published var selectedBrandId: String?
     @Published var minPrice: Decimal?
     @Published var maxPrice: Decimal?
 
-    let availableCategories: [Category]
-    let availableBrands: [String]
+    @Published private(set) var availableCategories: [Category] = []
+    @Published private(set) var availableBrands: [Brand] = []
+    @Published private(set) var isLoading = true
 
-    nonisolated init() {
-        self.availableCategories = MockData.categories
-        self.availableBrands = Array(Set(MockData.products.map(\.brand))).sorted()
-    }
+    private let categoryService: any CategoryServiceProtocol
 
-    nonisolated init(currentFilters: SearchFilters?) {
-        self.availableCategories = MockData.categories
-        self.availableBrands = Array(Set(MockData.products.map(\.brand))).sorted()
-
+    nonisolated init(categoryService: any CategoryServiceProtocol, currentFilters: SearchFilters? = nil) {
+        self.categoryService = categoryService
         if let filters = currentFilters {
-            self.selectedCategories = Set(filters.categories ?? [])
-            self.selectedBrands = Set(filters.brands ?? [])
+            self.selectedCategoryId = filters.categoryId
+            self.selectedBrandId = filters.brandId
             self.minPrice = filters.minPrice
             self.maxPrice = filters.maxPrice
-        } else {
-            self.selectedCategories = []
-            self.selectedBrands = []
-            self.minPrice = nil
-            self.maxPrice = nil
         }
+        Task { await self.loadOptions() }
     }
 
-    func toggleCategory(_ categoryId: String) {
-        if selectedCategories.contains(categoryId) {
-            selectedCategories.remove(categoryId)
-        } else {
-            selectedCategories.insert(categoryId)
-        }
+    @MainActor
+    private func loadOptions() async {
+        async let cats = (try? categoryService.fetchCategoryTree()) ?? []
+        async let brnds = (try? categoryService.fetchBrands()) ?? []
+        let (c, b) = await (cats, brnds)
+        availableCategories = c
+        availableBrands = b
+        isLoading = false
     }
 
-    func toggleBrand(_ brand: String) {
-        if selectedBrands.contains(brand) {
-            selectedBrands.remove(brand)
-        } else {
-            selectedBrands.insert(brand)
-        }
+    func selectCategory(_ id: String?) {
+        selectedCategoryId = (selectedCategoryId == id) ? nil : id
+    }
+
+    func selectBrand(_ id: String?) {
+        selectedBrandId = (selectedBrandId == id) ? nil : id
     }
 
     func apply() -> SearchFilters {
         SearchFilters(
-            categories: selectedCategories.isEmpty ? nil : Array(selectedCategories),
-            brands: selectedBrands.isEmpty ? nil : Array(selectedBrands),
+            categoryId: selectedCategoryId,
+            brandId: selectedBrandId,
             minPrice: minPrice,
-            maxPrice: maxPrice
+            maxPrice: maxPrice,
+            inStock: nil,
+            hasDiscount: nil
         )
     }
 
     func reset() {
-        selectedCategories = []
-        selectedBrands = []
+        selectedCategoryId = nil
+        selectedBrandId = nil
         minPrice = nil
         maxPrice = nil
     }

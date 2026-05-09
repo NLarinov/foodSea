@@ -23,7 +23,13 @@ final class CartViewModel {
     func loadRecommendedProducts() {
         Task {
             do {
-                let products = try await productService.fetchProducts(page: 0, perPage: Constants.API.itemsPerPage)
+                let products = try await productService.fetchProducts(
+                    page: 0,
+                    perPage: Constants.API.itemsPerPage,
+                    categoryId: nil,
+                    subcategoryId: nil,
+                    brandId: nil
+                )
                 recommendedProducts = products
             } catch {}
         }

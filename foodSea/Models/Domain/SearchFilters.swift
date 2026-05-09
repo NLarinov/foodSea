@@ -1,15 +1,19 @@
 import Foundation
 
-struct SearchFilters: Codable, Sendable {
-    var categories: [String]?
-    var brands: [String]?
+struct SearchFilters: Codable, Sendable, Equatable {
+    var categoryId: String?
+    var brandId: String?
     var minPrice: Decimal?
     var maxPrice: Decimal?
+    var inStock: Bool?
+    var hasDiscount: Bool?
 
     var isEmpty: Bool {
-        (categories?.isEmpty ?? true) &&
-        (brands?.isEmpty ?? true) &&
+        categoryId == nil &&
+        brandId == nil &&
         minPrice == nil &&
-        maxPrice == nil
+        maxPrice == nil &&
+        inStock == nil &&
+        hasDiscount == nil
     }
 }

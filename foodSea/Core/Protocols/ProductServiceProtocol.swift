@@ -1,7 +1,13 @@
 import Foundation
 
 protocol ProductServiceProtocol: Sendable {
-    func fetchProducts(page: Int, perPage: Int) async throws -> [Product]
+    func fetchProducts(
+        page: Int,
+        perPage: Int,
+        categoryId: String?,
+        subcategoryId: String?,
+        brandId: String?
+    ) async throws -> [Product]
     func fetchProduct(id: String) async throws -> Product
     func searchProducts(query: String, filters: SearchFilters?) async throws -> [Product]
     func fetchSimilarProducts(productId: String) async throws -> [Product]

@@ -19,7 +19,7 @@ private func remapImageURL(_ urlString: String?) -> URL? {
 
 extension CategoryBriefDTO {
     func toDomain() -> Category {
-        Category(id: id, name: name, iconName: nil)
+        Category(id: id, name: name)
     }
 }
 
@@ -80,7 +80,7 @@ extension ProductBriefDTO {
             name: name,
             description: "",
             brand: "",
-            category: Category(id: "", name: "", iconName: nil),
+            category: Category(id: "", name: ""),
             imageURL: remapImageURL(imageUrl),
             barcode: nil,
             prices: prices,
@@ -104,7 +104,7 @@ extension SearchResultItemDTO {
             name: name,
             description: "",
             brand: brandId ?? "",
-            category: Category(id: categoryId, name: "", iconName: nil),
+            category: Category(id: categoryId, name: ""),
             imageURL: remapImageURL(imageUrl),
             barcode: barcode,
             prices: [priceEntry],
@@ -120,7 +120,7 @@ extension AnalogDTO {
             name: productName,
             description: "",
             brand: "",
-            category: Category(id: "", name: "", iconName: nil),
+            category: Category(id: "", name: ""),
             imageURL: nil,
             barcode: nil,
             prices: [PriceEntry(
@@ -146,7 +146,7 @@ extension AssignmentDTO {
             name: productName,
             description: "",
             brand: "",
-            category: Category(id: "", name: "", iconName: nil),
+            category: Category(id: "", name: ""),
             imageURL: nil,
             barcode: nil,
             prices: [PriceEntry(
@@ -165,7 +165,7 @@ extension AssignmentDTO {
 
 extension SubstitutionDTO {
     func toDomain() -> Substitution {
-        let emptyCategory = Category(id: "", name: "", iconName: nil)
+        let emptyCategory = Category(id: "", name: "")
         let original = Product(id: originalProductId, name: originalProductName,
                                description: "", brand: "", category: emptyCategory,
                                imageURL: nil, barcode: nil, prices: [], isAvailable: true)
@@ -235,9 +235,31 @@ extension OrderBriefDTO {
     }
 }
 
+// MARK: - Categories & Brands
+
+extension CategoryNodeDTO {
+    func toDomain(parentId: String? = nil) -> Category {
+        let kids = children ?? []
+        return Category(
+            id: id,
+            name: name,
+            slug: slug,
+            parentId: parentId,
+            sortOrder: sortOrder,
+            children: kids.map { $0.toDomain(parentId: self.id) }
+        )
+    }
+}
+
+extension BrandDTO {
+    func toDomain() -> Brand {
+        Brand(id: id, name: name)
+    }
+}
+
 extension OrderDetailDTO {
     func toDomain() -> OrderDetail {
-        let emptyCategory = Category(id: "", name: "", iconName: nil)
+        let emptyCategory = Category(id: "", name: "")
         let orderItems = items.map { item -> OrderItem in
             let product = Product(id: item.productId, name: item.productName,
                                   description: "", brand: "", category: emptyCategory,

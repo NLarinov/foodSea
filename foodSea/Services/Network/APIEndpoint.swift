@@ -8,11 +8,15 @@ enum APIEndpoint {
     case logout
 
     // Products (core service)
-    case listProducts(page: Int, perPage: Int)
+    case listProducts(page: Int, perPage: Int, categoryId: String?, subcategoryId: String?, brandId: String?)
     case getProduct(id: String)
     case getProductByBarcode(code: String)
     case getOffers(productId: String)
     case searchProducts(query: String, filters: SearchFilters?)
+
+    // Catalog metadata (core service)
+    case listCategories
+    case listBrands
 
     // Cart (core service)
     case getCart
@@ -43,6 +47,8 @@ extension APIEndpoint {
         case .getProductByBarcode(let code):   return "/api/v1/products/barcode/\(code)"
         case .getOffers(let productId):        return "/api/v1/products/\(productId)/offers"
         case .searchProducts:                  return "/api/v1/search"
+        case .listCategories:                  return "/api/v1/categories"
+        case .listBrands:                      return "/api/v1/brands"
         case .getCart:                         return "/api/v1/cart"
         case .addToCart:                       return "/api/v1/cart/items"
         case .updateCartItem(let id, _):       return "/api/v1/cart/items/\(id)"
@@ -101,13 +107,23 @@ extension APIEndpoint {
 
     var queryItems: [URLQueryItem] {
         switch self {
-        case .listProducts(let page, let perPage):
-            return [
+        case .listProducts(let page, let perPage, let categoryId, let subcategoryId, let brandId):
+            var items = [
                 URLQueryItem(name: "page", value: "\(page)"),
                 URLQueryItem(name: "page_size", value: "\(perPage)")
             ]
+            if let categoryId { items.append(URLQueryItem(name: "category_id", value: categoryId)) }
+            if let subcategoryId { items.append(URLQueryItem(name: "subcategory_id", value: subcategoryId)) }
+            if let brandId { items.append(URLQueryItem(name: "brand_id", value: brandId)) }
+            return items
         case .searchProducts(let query, let filters):
             var items = [URLQueryItem(name: "q", value: query)]
+            if let categoryId = filters?.categoryId {
+                items.append(URLQueryItem(name: "category_id", value: categoryId))
+            }
+            if let brandId = filters?.brandId {
+                items.append(URLQueryItem(name: "brand_id", value: brandId))
+            }
             if let minPrice = filters?.minPrice {
                 let kopecks = NSDecimalNumber(decimal: minPrice).multiplying(byPowerOf10: 2).int64Value
                 items.append(URLQueryItem(name: "min_price", value: "\(kopecks)"))
@@ -115,6 +131,12 @@ extension APIEndpoint {
             if let maxPrice = filters?.maxPrice {
                 let kopecks = NSDecimalNumber(decimal: maxPrice).multiplying(byPowerOf10: 2).int64Value
                 items.append(URLQueryItem(name: "max_price", value: "\(kopecks)"))
+            }
+            if let inStock = filters?.inStock {
+                items.append(URLQueryItem(name: "in_stock", value: inStock ? "true" : "false"))
+            }
+            if let hasDiscount = filters?.hasDiscount {
+                items.append(URLQueryItem(name: "has_discount", value: hasDiscount ? "true" : "false"))
             }
             return items
         default:

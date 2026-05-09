@@ -9,12 +9,18 @@ final class CatalogViewModel {
 
     private let productService: any ProductServiceProtocol
     private let cartService: any CartServiceProtocol
+    private let subcategoryId: String?
     private var currentPage = 1
     private var hasMorePages = true
 
-    nonisolated init(productService: any ProductServiceProtocol, cartService: any CartServiceProtocol) {
+    nonisolated init(
+        productService: any ProductServiceProtocol,
+        cartService: any CartServiceProtocol,
+        subcategoryId: String? = nil
+    ) {
         self.productService = productService
         self.cartService = cartService
+        self.subcategoryId = subcategoryId
     }
 
     func loadProducts() {
@@ -85,7 +91,10 @@ final class CatalogViewModel {
             do {
                 let fetched = try await productService.fetchProducts(
                     page: currentPage,
-                    perPage: Constants.API.itemsPerPage
+                    perPage: Constants.API.itemsPerPage,
+                    categoryId: nil,
+                    subcategoryId: subcategoryId,
+                    brandId: nil
                 )
                 if fetched.count < Constants.API.itemsPerPage {
                     hasMorePages = false

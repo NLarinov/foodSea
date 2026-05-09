@@ -18,7 +18,8 @@ final class HomeCoordinator: Coordinator {
     func start() {
         let viewModel = HomeViewModel(
             productService: container.productService,
-            cartService: container.cartService
+            cartService: container.cartService,
+            categoryService: container.categoryService
         )
         let homeVC = HomeViewController(viewModel: viewModel)
         homeVC.onProductSelected = { [weak self] product in
@@ -52,7 +53,10 @@ final class HomeCoordinator: Coordinator {
 
     private func showSearch() {
         let viewModel = SearchViewModel(productService: container.productService)
-        let searchVC = SearchViewController(viewModel: viewModel)
+        let searchVC = SearchViewController(
+            viewModel: viewModel,
+            categoryService: container.categoryService
+        )
         searchVC.onProductSelected = { [weak self] product in
             self?.showProductDetail(product)
         }

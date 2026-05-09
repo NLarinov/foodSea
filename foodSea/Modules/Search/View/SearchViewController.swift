@@ -55,8 +55,11 @@ final class SearchViewController: UIViewController {
         return indicator
     }()
 
-    init(viewModel: SearchViewModel) {
+    private let categoryService: any CategoryServiceProtocol
+
+    init(viewModel: SearchViewModel, categoryService: any CategoryServiceProtocol) {
         self.viewModel = viewModel
+        self.categoryService = categoryService
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -194,7 +197,10 @@ final class SearchViewController: UIViewController {
     }
 
     @objc private func filterTapped() {
-        let filterVM = FilterViewModel(currentFilters: viewModel.filters)
+        let filterVM = FilterViewModel(
+            categoryService: categoryService,
+            currentFilters: viewModel.filters
+        )
         let filterVC = FilterViewController(viewModel: filterVM)
         filterVC.onApply = { [weak self] filters in
             if filters.isEmpty {
