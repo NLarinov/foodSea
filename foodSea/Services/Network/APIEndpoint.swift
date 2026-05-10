@@ -43,6 +43,12 @@ enum APIEndpoint {
 
     // Voice (core service)
     case parseVoice(text: String, locale: String)
+
+    // Notifications (core service)
+    case registerDevice(token: String, appVersion: String?)
+    case unregisterDevice
+    case registerLiveActivity(orderId: String, pushToken: String)
+    case unregisterLiveActivity(orderId: String)
 }
 
 extension APIEndpoint {
@@ -75,17 +81,24 @@ extension APIEndpoint {
         case .placeOrder:                      return "/api/v1/orders"
         case .photoSearch:                     return "/api/v1/products/photo-search"
         case .parseVoice:                      return "/api/v1/voice/parse"
+        case .registerDevice:                  return "/api/v1/notifications/devices"
+        case .unregisterDevice:                return "/api/v1/notifications/devices"
+        case .registerLiveActivity(let orderId, _):
+            return "/api/v1/notifications/orders/\(orderId)/live-activity"
+        case .unregisterLiveActivity(let orderId):
+            return "/api/v1/notifications/orders/\(orderId)/live-activity"
         }
     }
 
     var method: String {
         switch self {
         case .register, .login, .refresh, .logout, .addToCart, .runOptimization, .placeOrder,
-             .photoSearch, .parseVoice, .oauthCallback, .oauthAppleNative, .oauthYandexSDKCallback:
+             .photoSearch, .parseVoice, .oauthCallback, .oauthAppleNative, .oauthYandexSDKCallback,
+             .registerDevice, .registerLiveActivity:
             return "POST"
         case .updateCartItem:
             return "PUT"
-        case .removeCartItem, .clearCart:
+        case .removeCartItem, .clearCart, .unregisterDevice, .unregisterLiveActivity:
             return "DELETE"
         default:
             return "GET"
@@ -126,6 +139,19 @@ extension APIEndpoint {
             return try? encoder.encode(OAuthYandexSDKCallbackRequestDTO(accessToken: accessToken))
         case .parseVoice(let text, let locale):
             return try? encoder.encode(ParseVoiceRequestDTO(text: text, locale: locale))
+        case .registerDevice(let token, let appVersion):
+            return try? encoder.encode(RegisterDeviceRequestDTO(
+                apnsToken: token,
+                bundleId: Constants.PushTokens.bundleID,
+                environment: Constants.PushTokens.environment,
+                appVersion: appVersion
+            ))
+        case .registerLiveActivity(_, let pushToken):
+            return try? encoder.encode(RegisterLiveActivityRequestDTO(
+                pushToken: pushToken,
+                bundleId: Constants.PushTokens.bundleID,
+                environment: Constants.PushTokens.environment
+            ))
         default:
             return nil
         }
@@ -186,4 +212,17 @@ extension APIEndpoint {
 struct ParseVoiceRequestDTO: Encodable, Sendable {
     let text: String
     let locale: String
+}
+
+struct RegisterDeviceRequestDTO: Encodable, Sendable {
+    let apnsToken: String
+    let bundleId: String
+    let environment: String
+    let appVersion: String?
+}
+
+struct RegisterLiveActivityRequestDTO: Encodable, Sendable {
+    let pushToken: String
+    let bundleId: String
+    let environment: String
 }

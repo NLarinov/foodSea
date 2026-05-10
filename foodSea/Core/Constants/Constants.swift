@@ -181,6 +181,12 @@ enum Constants {
 
     enum PushTokens {
         static let apnsTokenKey = "foodsea.apnsToken"
+        static let bundleID = Bundle.main.bundleIdentifier ?? "me.foodSea"
+        #if DEBUG
+        static let environment = "sandbox"
+        #else
+        static let environment = "production"
+        #endif
     }
 
     enum Home {

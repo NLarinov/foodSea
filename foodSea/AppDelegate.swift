@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             object: nil,
             userInfo: [NotificationUserInfoKey.apnsToken: token]
         )
+        NotificationsRegistrar.shared.tokenChanged()
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
