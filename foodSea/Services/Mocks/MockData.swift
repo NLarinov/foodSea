@@ -11,68 +11,95 @@ enum MockData {
     ]
 
     static let categories: [Category] = [
-        Category(id: "cat_1", name: "Молочные продукты", iconName: "cup.and.saucer"),
-        Category(id: "cat_2", name: "Хлеб и выпечка", iconName: "birthday.cake"),
-        Category(id: "cat_3", name: "Мясо и птица", iconName: "fork.knife"),
-        Category(id: "cat_4", name: "Овощи и фрукты", iconName: "leaf"),
-        Category(id: "cat_5", name: "Напитки", iconName: "waterbottle"),
-        Category(id: "cat_6", name: "Крупы и макароны", iconName: "bag"),
-        Category(id: "cat_7", name: "Кондитерские изделия", iconName: "birthday.cake"),
-        Category(id: "cat_8", name: "Бытовая химия", iconName: "sparkles"),
+        Category(id: "cat_1", name: "Молочные продукты", slug: "молочные_продукты_яйца"),
+        Category(id: "cat_2", name: "Хлеб и выпечка", slug: "хлеб_и_выпечка"),
+        Category(id: "cat_3", name: "Мясо и птица", slug: "мясо_и_птица"),
+        Category(id: "cat_4", name: "Овощи и фрукты", slug: "овощи_и_фрукты"),
+        Category(id: "cat_5", name: "Напитки", slug: "напитки"),
+        Category(id: "cat_6", name: "Крупы и макароны", slug: "крупы_и_макароны"),
+        Category(id: "cat_7", name: "Кондитерские изделия", slug: "сладости_десерты_мороженое"),
+        Category(id: "cat_8", name: "Бытовая химия", slug: "стирка_и_уборка"),
     ]
 
     struct Subcategory: Hashable, Sendable {
         let name: String
-        let iconName: String
         let categoryId: String
     }
 
     static let subcategories: [String: [Subcategory]] = [
         "cat_1": [
-            Subcategory(name: "Молоко, масло и яйца", iconName: "drop", categoryId: "cat_1"),
-            Subcategory(name: "Сыры", iconName: "circle.grid.2x2", categoryId: "cat_1"),
-            Subcategory(name: "Кефир, сметана, творог", iconName: "cup.and.saucer", categoryId: "cat_1"),
-            Subcategory(name: "Йогурты и десерты", iconName: "birthday.cake", categoryId: "cat_1"),
+            Subcategory(name: "Молоко, масло и яйца", categoryId: "cat_1"),
+            Subcategory(name: "Сыры", categoryId: "cat_1"),
+            Subcategory(name: "Кефир, сметана, творог", categoryId: "cat_1"),
+            Subcategory(name: "Йогурты и десерты", categoryId: "cat_1"),
         ],
         "cat_2": [
-            Subcategory(name: "Хлеб", iconName: "oval", categoryId: "cat_2"),
-            Subcategory(name: "Выпечка и сдоба", iconName: "birthday.cake", categoryId: "cat_2"),
-            Subcategory(name: "Лаваш и лепёшки", iconName: "circle", categoryId: "cat_2"),
+            Subcategory(name: "Хлеб", categoryId: "cat_2"),
+            Subcategory(name: "Выпечка и сдоба", categoryId: "cat_2"),
+            Subcategory(name: "Лаваш и лепёшки", categoryId: "cat_2"),
         ],
         "cat_3": [
-            Subcategory(name: "Курица и индейка", iconName: "fork.knife", categoryId: "cat_3"),
-            Subcategory(name: "Свинина и говядина", iconName: "flame", categoryId: "cat_3"),
-            Subcategory(name: "Фарш и полуфабрикаты", iconName: "seal", categoryId: "cat_3"),
-            Subcategory(name: "Колбасы и сосиски", iconName: "oval.portrait", categoryId: "cat_3"),
-            Subcategory(name: "Яйца", iconName: "oval", categoryId: "cat_3"),
+            Subcategory(name: "Курица и индейка", categoryId: "cat_3"),
+            Subcategory(name: "Свинина и говядина", categoryId: "cat_3"),
+            Subcategory(name: "Фарш и полуфабрикаты", categoryId: "cat_3"),
+            Subcategory(name: "Колбасы и сосиски", categoryId: "cat_3"),
+            Subcategory(name: "Яйца", categoryId: "cat_3"),
         ],
         "cat_4": [
-            Subcategory(name: "Овощи", iconName: "leaf", categoryId: "cat_4"),
-            Subcategory(name: "Фрукты", iconName: "applelogo", categoryId: "cat_4"),
-            Subcategory(name: "Зелень и салаты", iconName: "leaf.arrow.circlepath", categoryId: "cat_4"),
+            Subcategory(name: "Овощи", categoryId: "cat_4"),
+            Subcategory(name: "Фрукты", categoryId: "cat_4"),
+            Subcategory(name: "Зелень и салаты", categoryId: "cat_4"),
         ],
         "cat_5": [
-            Subcategory(name: "Вода", iconName: "drop", categoryId: "cat_5"),
-            Subcategory(name: "Соки и морсы", iconName: "waterbottle", categoryId: "cat_5"),
-            Subcategory(name: "Газированные напитки", iconName: "bubbles.and.sparkles", categoryId: "cat_5"),
-            Subcategory(name: "Чай и кофе", iconName: "cup.and.saucer", categoryId: "cat_5"),
+            Subcategory(name: "Вода", categoryId: "cat_5"),
+            Subcategory(name: "Соки и морсы", categoryId: "cat_5"),
+            Subcategory(name: "Газированные напитки", categoryId: "cat_5"),
+            Subcategory(name: "Чай и кофе", categoryId: "cat_5"),
         ],
         "cat_6": [
-            Subcategory(name: "Крупы", iconName: "bag", categoryId: "cat_6"),
-            Subcategory(name: "Макароны", iconName: "rectangle.stack", categoryId: "cat_6"),
-            Subcategory(name: "Масло и соусы", iconName: "drop", categoryId: "cat_6"),
+            Subcategory(name: "Крупы", categoryId: "cat_6"),
+            Subcategory(name: "Макароны", categoryId: "cat_6"),
+            Subcategory(name: "Масло и соусы", categoryId: "cat_6"),
         ],
         "cat_7": [
-            Subcategory(name: "Шоколад", iconName: "square.fill", categoryId: "cat_7"),
-            Subcategory(name: "Печенье и вафли", iconName: "circle.grid.3x3", categoryId: "cat_7"),
-            Subcategory(name: "Конфеты", iconName: "gift", categoryId: "cat_7"),
+            Subcategory(name: "Шоколад", categoryId: "cat_7"),
+            Subcategory(name: "Печенье и вафли", categoryId: "cat_7"),
+            Subcategory(name: "Конфеты", categoryId: "cat_7"),
         ],
         "cat_8": [
-            Subcategory(name: "Для кухни", iconName: "sparkles", categoryId: "cat_8"),
-            Subcategory(name: "Для стирки", iconName: "washer", categoryId: "cat_8"),
-            Subcategory(name: "Бумажная продукция", iconName: "doc", categoryId: "cat_8"),
+            Subcategory(name: "Для кухни", categoryId: "cat_8"),
+            Subcategory(name: "Для стирки", categoryId: "cat_8"),
+            Subcategory(name: "Бумажная продукция", categoryId: "cat_8"),
         ],
     ]
+
+    static let categoryTree: [Category] = categories.map { cat in
+        let subs = (subcategories[cat.id] ?? []).enumerated().map { idx, sub in
+            Category(
+                id: "\(cat.id)_sub_\(idx)",
+                name: sub.name,
+                slug: cat.slug + "_" + sub.name.lowercased().replacingOccurrences(of: " ", with: "_"),
+                parentId: cat.id,
+                sortOrder: idx,
+                children: []
+            )
+        }
+        return Category(
+            id: cat.id,
+            name: cat.name,
+            slug: cat.slug,
+            parentId: nil,
+            sortOrder: 0,
+            children: subs
+        )
+    }
+
+    static let brands: [Brand] = {
+        let names = Set(products.map(\.brand))
+        return names.sorted().enumerated().map { idx, name in
+            Brand(id: "brand_\(idx)", name: name)
+        }
+    }()
 
     static let promoBanners: [(productId: String, title: String, subtitle: String, color: String)] = [
         ("prod_7", "Куриная грудка", "Скидка 15% на Петелинку", "systemOrange"),

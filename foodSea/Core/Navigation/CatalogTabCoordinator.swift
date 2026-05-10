@@ -16,24 +16,23 @@ final class CatalogTabCoordinator: Coordinator {
     }
 
     func start() {
-        let browseVC = CatalogBrowseViewController()
+        let browseVC = CatalogBrowseViewController(categoryService: container.categoryService)
         browseVC.title = Constants.TabBar.catalogTitle
-        browseVC.onCategorySelected = { [weak self] categoryId in
-            self?.showCategoryProducts(categoryId: categoryId)
+        browseVC.onSubcategorySelected = { [weak self] subcategory in
+            self?.showSubcategoryProducts(subcategory)
         }
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.viewControllers = [browseVC]
     }
 
-    private func showCategoryProducts(categoryId: String) {
+    private func showSubcategoryProducts(_ subcategory: Category) {
         let viewModel = CatalogViewModel(
             productService: container.productService,
-            cartService: container.cartService
+            cartService: container.cartService,
+            subcategoryId: subcategory.id
         )
         let catalogVC = CatalogViewController(viewModel: viewModel)
-
-        let categoryName = MockData.categories.first { $0.id == categoryId }?.name ?? Constants.TabBar.catalogTitle
-        catalogVC.title = categoryName
+        catalogVC.title = subcategory.name
 
         catalogVC.onProductSelected = { [weak self] product in
             self?.showProductDetail(product)
@@ -65,7 +64,10 @@ final class CatalogTabCoordinator: Coordinator {
 
     private func showSearch() {
         let viewModel = SearchViewModel(productService: container.productService)
-        let searchVC = SearchViewController(viewModel: viewModel)
+        let searchVC = SearchViewController(
+            viewModel: viewModel,
+            categoryService: container.categoryService
+        )
         searchVC.onProductSelected = { [weak self] product in
             self?.showProductDetail(product)
         }

@@ -9,6 +9,7 @@ final class DIContainer: @unchecked Sendable {
     let orderService: any OrderServiceProtocol
     let optimizationService: any OptimizationServiceProtocol
     let voiceService: any VoiceServiceProtocol
+    let categoryService: any CategoryServiceProtocol
 
     init(useMocks: Bool = true) {
         self.useMocks = useMocks
@@ -24,6 +25,7 @@ final class DIContainer: @unchecked Sendable {
             orderService = MockOrderService()
             optimizationService = MockOptimizationService()
             voiceService = MockVoiceService()
+            categoryService = MockCategoryService()
         } else {
             let tokenStore = AuthTokenStore()
             let coreURL = Constants.API.coreBaseURL
@@ -50,6 +52,7 @@ final class DIContainer: @unchecked Sendable {
             optimizationService = RealOptimizationService(client: optClient)
             orderService = RealOrderService(client: ordClient)
             voiceService = RealVoiceService(coreClient: coreClient, productService: realProductService)
+            categoryService = RealCategoryService(client: coreClient)
         }
     }
 }

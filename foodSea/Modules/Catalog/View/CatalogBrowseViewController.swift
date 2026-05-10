@@ -1,14 +1,10 @@
 import UIKit
 
 final class CatalogBrowseViewController: UIViewController {
-    var onCategorySelected: ((String) -> Void)?
+    var onSubcategorySelected: ((Category) -> Void)?
 
-    private struct SectionData {
-        let category: Category
-        let subcategories: [MockData.Subcategory]
-    }
-
-    private var sections: [SectionData] = []
+    private let categoryService: any CategoryServiceProtocol
+    private var sections: [Category] = []
 
     private lazy var collectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
@@ -21,20 +17,43 @@ final class CatalogBrowseViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: CatalogSectionHeader.reuseIdentifier
         )
+        cv.refreshControl = refreshControl
         return cv
     }()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupData()
-        setupUI()
+    private lazy var refreshControl: UIRefreshControl = {
+        let rc = UIRefreshControl()
+        rc.addTarget(self, action: #selector(refreshTriggered), for: .valueChanged)
+        return rc
+    }()
+
+    private lazy var spinner: UIActivityIndicatorView = {
+        let s = UIActivityIndicatorView(style: .large)
+        s.hidesWhenStopped = true
+        return s
+    }()
+
+    private lazy var errorLabel: UILabel = {
+        let l = UILabel()
+        l.numberOfLines = 0
+        l.textAlignment = .center
+        l.textColor = UIColor.App.secondary
+        l.isHidden = true
+        return l
+    }()
+
+    init(categoryService: any CategoryServiceProtocol) {
+        self.categoryService = categoryService
+        super.init(nibName: nil, bundle: nil)
     }
 
-    private func setupData() {
-        sections = MockData.categories.compactMap { category in
-            guard let subs = MockData.subcategories[category.id], !subs.isEmpty else { return nil }
-            return SectionData(category: category, subcategories: subs)
-        }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+        loadTree()
     }
 
     private func setupUI() {
@@ -42,7 +61,50 @@ final class CatalogBrowseViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .always
 
         view.addSubview(collectionView)
+        view.addSubview(spinner)
+        view.addSubview(errorLabel)
         collectionView.pinToSuperview()
+
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            errorLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            errorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.UI.standardPadding),
+            errorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.UI.standardPadding),
+        ])
+    }
+
+    private func loadTree() {
+        if sections.isEmpty {
+            spinner.startAnimating()
+        }
+        errorLabel.isHidden = true
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let tree = try await categoryService.fetchCategoryTree()
+                await MainActor.run {
+                    self.sections = tree.filter { !$0.children.isEmpty }
+                    self.spinner.stopAnimating()
+                    self.refreshControl.endRefreshing()
+                    self.collectionView.reloadData()
+                }
+            } catch {
+                await MainActor.run {
+                    self.spinner.stopAnimating()
+                    self.refreshControl.endRefreshing()
+                    self.errorLabel.text = "Не удалось загрузить категории. Потяните вниз, чтобы повторить."
+                    self.errorLabel.isHidden = false
+                }
+            }
+        }
+    }
+
+    @objc private func refreshTriggered() {
+        loadTree()
     }
 
     private func makeLayout() -> UICollectionViewCompositionalLayout {
@@ -86,12 +148,10 @@ final class CatalogBrowseViewController: UIViewController {
 }
 
 extension CatalogBrowseViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        sections.count
-    }
+    func numberOfSections(in collectionView: UICollectionView) -> Int { sections.count }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        sections[section].subcategories.count
+        sections[section].children.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -101,8 +161,8 @@ extension CatalogBrowseViewController: UICollectionViewDataSource {
         ) as? SubcategoryCell else {
             return UICollectionViewCell()
         }
-        let sub = sections[indexPath.section].subcategories[indexPath.item]
-        cell.configure(name: sub.name, iconName: sub.iconName)
+        let sub = sections[indexPath.section].children[indexPath.item]
+        cell.configure(name: sub.name, slug: sub.slug)
         return cell
     }
 
@@ -120,15 +180,15 @@ extension CatalogBrowseViewController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
         let section = sections[indexPath.section]
-        header.configure(title: section.category.name, iconName: section.category.iconName)
+        header.configure(title: section.name, iconName: CategoryIconResolver.icon(for: section.slug))
         return header
     }
 }
 
 extension CatalogBrowseViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let sub = sections[indexPath.section].subcategories[indexPath.item]
-        onCategorySelected?(sub.categoryId)
+        let sub = sections[indexPath.section].children[indexPath.item]
+        onSubcategorySelected?(sub)
     }
 }
 

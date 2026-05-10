@@ -9,8 +9,20 @@ final class RealProductService: ProductServiceProtocol, @unchecked Sendable {
         self.optClient = optClient
     }
 
-    func fetchProducts(page: Int, perPage: Int) async throws -> [Product] {
-        let dtos: [ProductBriefDTO] = try await coreClient.request(.listProducts(page: page, perPage: perPage))
+    func fetchProducts(
+        page: Int,
+        perPage: Int,
+        categoryId: String?,
+        subcategoryId: String?,
+        brandId: String?
+    ) async throws -> [Product] {
+        let dtos: [ProductBriefDTO] = try await coreClient.request(.listProducts(
+            page: page,
+            perPage: perPage,
+            categoryId: categoryId,
+            subcategoryId: subcategoryId,
+            brandId: brandId
+        ))
         return dtos.map { $0.toDomain() }
     }
 

@@ -99,7 +99,8 @@ final class FilterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        populateFilters()
+        if let minPrice = viewModel.minPrice { minPriceField.text = "\(minPrice)" }
+        if let maxPrice = viewModel.maxPrice { maxPriceField.text = "\(maxPrice)" }
         bindViewModel()
     }
 
@@ -165,56 +166,63 @@ final class FilterViewController: UIViewController {
         resetButton.addTarget(self, action: #selector(resetTapped), for: .touchUpInside)
     }
 
-    private func populateFilters() {
-        for category in viewModel.availableCategories {
+    private func bindViewModel() {
+        viewModel.$availableCategories
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] categories in
+                self?.rebuildCategoryButtons(categories)
+            }
+            .store(in: &cancellables)
+
+        viewModel.$availableBrands
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] brands in
+                self?.rebuildBrandButtons(brands)
+            }
+            .store(in: &cancellables)
+
+        viewModel.$selectedCategoryId
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] id in self?.updateCategoryButtons(selected: id) }
+            .store(in: &cancellables)
+
+        viewModel.$selectedBrandId
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] id in self?.updateBrandButtons(selected: id) }
+            .store(in: &cancellables)
+    }
+
+    private func rebuildCategoryButtons(_ categories: [Category]) {
+        categoriesStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        for (index, category) in categories.enumerated() {
             let button = makeCheckButton(
                 title: category.name,
-                isSelected: viewModel.selectedCategories.contains(category.id)
+                isSelected: viewModel.selectedCategoryId == category.id
             )
-            button.tag = viewModel.availableCategories.firstIndex(where: { $0.id == category.id }) ?? 0
+            button.tag = index
             button.addTarget(self, action: #selector(categoryToggled(_:)), for: .touchUpInside)
             categoriesStack.addArrangedSubview(button)
         }
+    }
 
-        for (index, brand) in viewModel.availableBrands.enumerated() {
+    private func rebuildBrandButtons(_ brands: [Brand]) {
+        brandsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        for (index, brand) in brands.enumerated() {
             let button = makeCheckButton(
-                title: brand,
-                isSelected: viewModel.selectedBrands.contains(brand)
+                title: brand.name,
+                isSelected: viewModel.selectedBrandId == brand.id
             )
             button.tag = index
             button.addTarget(self, action: #selector(brandToggled(_:)), for: .touchUpInside)
             brandsStack.addArrangedSubview(button)
         }
-
-        if let minPrice = viewModel.minPrice {
-            minPriceField.text = "\(minPrice)"
-        }
-        if let maxPrice = viewModel.maxPrice {
-            maxPriceField.text = "\(maxPrice)"
-        }
-    }
-
-    private func bindViewModel() {
-        viewModel.$selectedCategories
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] selected in
-                self?.updateCategoryButtons(selected: selected)
-            }
-            .store(in: &cancellables)
-
-        viewModel.$selectedBrands
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] selected in
-                self?.updateBrandButtons(selected: selected)
-            }
-            .store(in: &cancellables)
     }
 
     private func makeCheckButton(title: String, isSelected: Bool) -> UIButton {
         var config = UIButton.Configuration.plain()
         config.title = title
         config.baseForegroundColor = UIColor.App.label
-        config.image = UIImage(systemName: isSelected ? "checkmark.square.fill" : "square")
+        config.image = UIImage(systemName: isSelected ? "checkmark.circle.fill" : "circle")
         config.imagePadding = Constants.UI.smallPadding
         config.contentInsets = NSDirectionalEdgeInsets(
             top: Constants.UI.smallPadding,
@@ -227,34 +235,34 @@ final class FilterViewController: UIViewController {
         return button
     }
 
-    private func updateCategoryButtons(selected: Set<String>) {
+    private func updateCategoryButtons(selected: String?) {
         for (index, view) in categoriesStack.arrangedSubviews.enumerated() {
             guard let button = view as? UIButton, index < viewModel.availableCategories.count else { continue }
             let categoryId = viewModel.availableCategories[index].id
-            let isSelected = selected.contains(categoryId)
-            button.configuration?.image = UIImage(systemName: isSelected ? "checkmark.square.fill" : "square")
+            let isSelected = (selected == categoryId)
+            button.configuration?.image = UIImage(systemName: isSelected ? "checkmark.circle.fill" : "circle")
         }
     }
 
-    private func updateBrandButtons(selected: Set<String>) {
+    private func updateBrandButtons(selected: String?) {
         for (index, view) in brandsStack.arrangedSubviews.enumerated() {
             guard let button = view as? UIButton, index < viewModel.availableBrands.count else { continue }
-            let brand = viewModel.availableBrands[index]
-            let isSelected = selected.contains(brand)
-            button.configuration?.image = UIImage(systemName: isSelected ? "checkmark.square.fill" : "square")
+            let brandId = viewModel.availableBrands[index].id
+            let isSelected = (selected == brandId)
+            button.configuration?.image = UIImage(systemName: isSelected ? "checkmark.circle.fill" : "circle")
         }
     }
 
     @objc private func categoryToggled(_ sender: UIButton) {
         guard sender.tag < viewModel.availableCategories.count else { return }
         let categoryId = viewModel.availableCategories[sender.tag].id
-        viewModel.toggleCategory(categoryId)
+        viewModel.selectCategory(categoryId)
     }
 
     @objc private func brandToggled(_ sender: UIButton) {
         guard sender.tag < viewModel.availableBrands.count else { return }
-        let brand = viewModel.availableBrands[sender.tag]
-        viewModel.toggleBrand(brand)
+        let brandId = viewModel.availableBrands[sender.tag].id
+        viewModel.selectBrand(brandId)
     }
 
     @objc private func applyTapped() {

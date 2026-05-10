@@ -1,12 +1,27 @@
 import Foundation
 
 final class MockProductService: ProductServiceProtocol, @unchecked Sendable {
-    func fetchProducts(page: Int, perPage: Int) async throws -> [Product] {
+    func fetchProducts(
+        page: Int,
+        perPage: Int,
+        categoryId: String?,
+        subcategoryId: String?,
+        brandId: String?
+    ) async throws -> [Product] {
         try await Task.sleep(nanoseconds: Constants.Mock.mediumDelay)
+        var filtered = MockData.products
+        if let categoryId {
+            filtered = filtered.filter { $0.category.id == categoryId }
+        }
+        // subcategoryId: mock products have no subcategory association; ignore for v1 mocks.
+        if let brandId,
+           let brandName = MockData.brands.first(where: { $0.id == brandId })?.name {
+            filtered = filtered.filter { $0.brand == brandName }
+        }
         let start = page * perPage
-        guard start < MockData.products.count else { return [] }
-        let end = min(start + perPage, MockData.products.count)
-        return Array(MockData.products[start..<end])
+        guard start < filtered.count else { return [] }
+        let end = min(start + perPage, filtered.count)
+        return Array(filtered[start..<end])
     }
 
     func fetchProduct(id: String) async throws -> Product {
@@ -31,11 +46,12 @@ final class MockProductService: ProductServiceProtocol, @unchecked Sendable {
         }
 
         if let filters {
-            if let categories = filters.categories, !categories.isEmpty {
-                results = results.filter { categories.contains($0.category.id) }
+            if let categoryId = filters.categoryId {
+                results = results.filter { $0.category.id == categoryId }
             }
-            if let brands = filters.brands, !brands.isEmpty {
-                results = results.filter { brands.contains($0.brand) }
+            if let brandId = filters.brandId,
+               let brandName = MockData.brands.first(where: { $0.id == brandId })?.name {
+                results = results.filter { $0.brand == brandName }
             }
             if let minPrice = filters.minPrice {
                 results = results.filter { ($0.lowestPrice ?? 0) >= minPrice }

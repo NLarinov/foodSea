@@ -29,10 +29,10 @@ final class SubcategoryCell: UICollectionViewCell {
         fatalError()
     }
 
-    func configure(name: String, iconName: String) {
+    func configure(name: String, slug: String) {
         nameLabel.text = name
         let config = UIImage.SymbolConfiguration(pointSize: Constants.Catalog.subcategoryIconSize, weight: .light)
-        iconView.image = UIImage(systemName: iconName, withConfiguration: config)
+        iconView.image = UIImage(systemName: CategoryIconResolver.icon(for: slug), withConfiguration: config)
     }
 
     private func setupUI() {

@@ -194,7 +194,14 @@ final class HomeViewController: UIViewController {
     }
 
     private func bindViewModel() {
-        viewModel.$filteredProducts
+        viewModel.$products
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.applySnapshot()
+            }
+            .store(in: &cancellables)
+
+        viewModel.$categories
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.applySnapshot()
@@ -248,7 +255,7 @@ final class HomeViewController: UIViewController {
         snapshot.appendItems(filterItems, toSection: SectionKind.filters)
 
         snapshot.appendSections([SectionKind.products])
-        let productItems = viewModel.filteredProducts.map {
+        let productItems = viewModel.products.map {
             Item(id: "product_\($0.id)", kind: .product($0))
         }
         snapshot.appendItems(productItems, toSection: SectionKind.products)
@@ -409,8 +416,7 @@ extension HomeViewController: UICollectionViewDelegate {
         willDisplay cell: UICollectionViewCell,
         forItemAt indexPath: IndexPath
     ) {
-        guard SectionKind(rawValue: indexPath.section) == .products,
-              viewModel.selectedCategory == nil else { return }
+        guard SectionKind(rawValue: indexPath.section) == .products else { return }
         let snapshot = dataSource.snapshot()
         let itemCount = snapshot.numberOfItems(inSection: .products)
         if indexPath.item >= itemCount - Constants.API.itemsPerPage / 2 {

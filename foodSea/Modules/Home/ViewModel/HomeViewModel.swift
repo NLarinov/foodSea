@@ -10,32 +10,36 @@ struct PromoBanner: Hashable {
 
 final class HomeViewModel {
     @Published var products: [Product] = []
-    @Published var filteredProducts: [Product] = []
+    @Published var categories: [Category] = []
     @Published var banners: [PromoBanner] = []
     @Published var isLoading = false
     @Published var error: AppError?
     @Published var cartQuantities: [String: Int] = [:]
     @Published var selectedCategory: String?
 
-    let categories = MockData.categories
-    private let bannerColors = ["systemOrange", "systemBlue", "systemPurple", "systemRed", "systemGreen"]
-    private let bannerLimit = 5
-
     private let productService: any ProductServiceProtocol
     private let cartService: any CartServiceProtocol
+    private let categoryService: any CategoryServiceProtocol
+    private let bannerColors = ["systemOrange", "systemBlue", "systemPurple", "systemRed", "systemGreen"]
+    private let bannerLimit = 5
     private var currentPage = 1
     private var hasMorePages = true
 
-    nonisolated init(productService: any ProductServiceProtocol, cartService: any CartServiceProtocol) {
+    nonisolated init(
+        productService: any ProductServiceProtocol,
+        cartService: any CartServiceProtocol,
+        categoryService: any CategoryServiceProtocol
+    ) {
         self.productService = productService
         self.cartService = cartService
+        self.categoryService = categoryService
     }
 
     func loadProducts() {
         currentPage = 1
         hasMorePages = true
         products = []
-        applyFilter()
+        loadCategoriesIfNeeded()
         fetchPage()
         refreshCartQuantities()
     }
@@ -45,37 +49,13 @@ final class HomeViewModel {
         fetchPage()
     }
 
-    private func fetchPage() {
-        isLoading = true
-        Task {
-            do {
-                let fetched = try await productService.fetchProducts(
-                    page: currentPage,
-                    perPage: Constants.API.itemsPerPage
-                )
-                if fetched.count < Constants.API.itemsPerPage {
-                    hasMorePages = false
-                }
-                let existingIds = Set(products.map(\.id))
-                let newItems = fetched.filter { !existingIds.contains($0.id) }
-                if newItems.isEmpty {
-                    hasMorePages = false
-                } else {
-                    products.append(contentsOf: newItems)
-                    applyFilter()
-                    updateBanners()
-                }
-                currentPage += 1
-            } catch {
-                self.error = error as? AppError ?? .unknown(error.localizedDescription)
-            }
-            isLoading = false
-        }
-    }
-
     func selectCategory(_ categoryId: String?) {
+        guard selectedCategory != categoryId else { return }
         selectedCategory = categoryId
-        applyFilter()
+        currentPage = 1
+        hasMorePages = true
+        products = []
+        fetchPage()
     }
 
     func addToCart(product: Product) {
@@ -135,11 +115,45 @@ final class HomeViewModel {
         }
     }
 
-    private func applyFilter() {
-        if let categoryId = selectedCategory {
-            filteredProducts = products.filter { $0.category.id == categoryId }
-        } else {
-            filteredProducts = products
+    private func loadCategoriesIfNeeded() {
+        guard categories.isEmpty else { return }
+        Task {
+            do {
+                let tree = try await categoryService.fetchCategoryTree()
+                await MainActor.run { self.categories = tree }
+            } catch {
+                // Soft-fail: filter strip will show only "Все" chip.
+            }
+        }
+    }
+
+    private func fetchPage() {
+        isLoading = true
+        Task {
+            do {
+                let fetched = try await productService.fetchProducts(
+                    page: currentPage,
+                    perPage: Constants.API.itemsPerPage,
+                    categoryId: selectedCategory,
+                    subcategoryId: nil,
+                    brandId: nil
+                )
+                if fetched.count < Constants.API.itemsPerPage {
+                    hasMorePages = false
+                }
+                let existingIds = Set(products.map(\.id))
+                let newItems = fetched.filter { !existingIds.contains($0.id) }
+                if newItems.isEmpty {
+                    hasMorePages = false
+                } else {
+                    products.append(contentsOf: newItems)
+                    updateBanners()
+                }
+                currentPage += 1
+            } catch {
+                self.error = error as? AppError ?? .unknown(error.localizedDescription)
+            }
+            isLoading = false
         }
     }
 }
