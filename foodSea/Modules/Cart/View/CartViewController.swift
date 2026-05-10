@@ -288,65 +288,11 @@ final class CartViewController: UIViewController {
     }
 
     private func makeProductCard(product: Product) -> UIView {
-        let card = UIView()
-        card.backgroundColor = UIColor.App.secondaryBackground
-        card.layer.cornerRadius = Constants.UI.cornerRadius
-        card.clipsToBounds = true
-
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "photo")
-        imageView.tintColor = UIColor.App.secondary
-
-        let nameLabel = UILabel()
-        nameLabel.text = product.name
-        nameLabel.font = .systemFont(ofSize: Constants.UI.titleFontSize, weight: .medium)
-        nameLabel.textColor = UIColor.App.label
-        nameLabel.numberOfLines = 2
-
-        let priceLabel = UILabel()
-        priceLabel.font = .systemFont(ofSize: Constants.UI.priceFontSize, weight: .bold)
-        priceLabel.textColor = UIColor.App.pricePrimary
-        if let lowest = product.lowestPrice {
-            let formatted = priceFormatter.string(from: NSDecimalNumber(decimal: lowest)) ?? "\(lowest)"
-            priceLabel.text = "\(formatted) ₽"
-        }
-
-        let addButton = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: Constants.UI.tabBarIconSize, weight: .medium)
-        addButton.setImage(UIImage(systemName: "cart.badge.plus", withConfiguration: config), for: .normal)
-        addButton.tintColor = UIColor.App.primary
-
-        let action = UIAction { [weak self] _ in
+        let card = ProductCardView()
+        card.configure(with: product)
+        card.addToCartAction = { [weak self] in
             self?.viewModel.addToCart(product: product)
         }
-        addButton.addAction(action, for: .touchUpInside)
-
-        let stack = UIStackView(arrangedSubviews: [imageView, nameLabel, priceLabel])
-        stack.axis = .vertical
-        stack.spacing = Constants.UI.smallPadding
-
-        card.addSubview(stack)
-        card.addSubview(addButton)
-
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        addButton.translatesAutoresizingMaskIntoConstraints = false
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalToConstant: Constants.UI.thumbnailSize),
-
-            stack.topAnchor.constraint(equalTo: card.topAnchor, constant: Constants.UI.smallPadding),
-            stack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: Constants.UI.smallPadding),
-            stack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -Constants.UI.smallPadding),
-
-            addButton.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -Constants.UI.smallPadding),
-            addButton.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -Constants.UI.smallPadding),
-            addButton.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.UI.minimumTapSize),
-            addButton.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.UI.minimumTapSize),
-
-            stack.bottomAnchor.constraint(lessThanOrEqualTo: addButton.topAnchor, constant: -Constants.UI.smallPadding),
-        ])
 
         let tap = CardTapGesture(target: self, action: #selector(recommendedCardTapped(_:)))
         tap.product = product

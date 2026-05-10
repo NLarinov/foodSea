@@ -25,6 +25,7 @@ final class VoiceInputViewController: UIViewController {
         label.font = .systemFont(ofSize: Constants.UI.titleFontSize, weight: .medium)
         label.textColor = UIColor.App.label
         label.textAlignment = .center
+        label.numberOfLines = 0
         return label
     }()
 
@@ -252,6 +253,8 @@ final class VoiceInputViewController: UIViewController {
             updateProcessingState()
         case .results:
             updateResultsState()
+        case .empty(let message):
+            updateEmptyState(message: message)
         case .error(let error):
             updateIdleState()
             showError(error)
@@ -318,6 +321,23 @@ final class VoiceInputViewController: UIViewController {
         stopPulseAnimation()
     }
 
+    private func updateEmptyState(message: String) {
+        stateLabel.text = message
+        hintLabel.isHidden = false
+        durationLabel.isHidden = true
+        partialTranscriptLabel.isHidden = true
+        tableView.isHidden = true
+        addAllButton.isHidden = true
+        retryButton.isHidden = true
+        activityIndicator.stopAnimating()
+        micButton.isHidden = false
+        micButton.backgroundColor = UIColor.App.primary
+        stopPulseAnimation()
+
+        let config = UIImage.SymbolConfiguration(pointSize: 36, weight: .medium)
+        micButton.setImage(UIImage(systemName: "mic.fill", withConfiguration: config), for: .normal)
+    }
+
     private func startPulseAnimation() {
         let pulse = CAShapeLayer()
         pulse.path = UIBezierPath(
@@ -349,7 +369,7 @@ final class VoiceInputViewController: UIViewController {
 
     @objc private func micTapped() {
         switch viewModel.state {
-        case .idle, .results, .error:
+        case .idle, .results, .empty, .error:
             viewModel.startRecording()
         case .listening:
             viewModel.stopRecording()

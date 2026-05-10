@@ -22,7 +22,7 @@ final class StatusTimelineView: UIView {
     private func buildTimeline() {
         subviews.forEach { $0.removeFromSuperview() }
 
-        let allStatuses = OrderStatus.allCases.filter { $0 != .cancelled }
+        let allStatuses = OrderStatus.allCases.filter { $0 != .cancelled && $0 != .assembling && $0 != .shipped }
         let passedStatuses = Set(events.map(\.status))
         var previousAnchor: NSLayoutYAxisAnchor = topAnchor
 

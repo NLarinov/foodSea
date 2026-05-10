@@ -123,7 +123,6 @@
 			children = (
 				8153E87218DA721BA08E6126 /* foodSea.entitlements */,
 			);
-			name = foodSea;
 			path = foodSea;
 			sourceTree = "<group>";
 		};

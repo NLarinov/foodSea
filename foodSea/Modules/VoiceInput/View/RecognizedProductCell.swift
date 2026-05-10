@@ -74,8 +74,14 @@ final class RecognizedProductCell: UITableViewCell {
         fatalError()
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        productImageView.cancelRemoteImage()
+    }
+
     func configure(with item: RecognizedProduct) {
         nameLabel.text = item.product.name
+        productImageView.setRemoteImage(item.product.imageURL, placeholderSymbol: "cart")
         currentQuantity = item.quantity
         currentUnit = item.unit
         quantityLabel.text = "\(item.quantity) \(item.unit)"

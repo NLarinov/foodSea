@@ -32,6 +32,7 @@ final class HomeViewController: UIViewController {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
         cv.backgroundColor = UIColor.App.background
         cv.delegate = self
+        cv.prefetchDataSource = self
         cv.register(BannerCell.self, forCellWithReuseIdentifier: BannerCell.reuseIdentifier)
         cv.register(FilterChipCell.self, forCellWithReuseIdentifier: FilterChipCell.reuseIdentifier)
         cv.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseIdentifier)
@@ -219,12 +220,25 @@ final class HomeViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] loading in
                 guard let self else { return }
-                if loading && viewModel.products.isEmpty {
+                if loading && viewModel.products.isEmpty && viewModel.categories.isEmpty {
                     activityIndicator.startAnimating()
                 } else {
                     activityIndicator.stopAnimating()
                     refreshControl.endRefreshing()
                 }
+            }
+            .store(in: &cancellables)
+
+        viewModel.$selectedCategory
+            .receive(on: DispatchQueue.main)
+            .dropFirst()
+            .sink { [weak self] _ in
+                guard let self else { return }
+                var snapshot = dataSource.snapshot()
+                guard snapshot.sectionIdentifiers.contains(.filters) else { return }
+                let filterItems = snapshot.itemIdentifiers(inSection: .filters)
+                snapshot.reconfigureItems(filterItems)
+                dataSource.apply(snapshot, animatingDifferences: false)
             }
             .store(in: &cancellables)
 
@@ -422,6 +436,31 @@ extension HomeViewController: UICollectionViewDelegate {
         if indexPath.item >= itemCount - Constants.API.itemsPerPage / 2 {
             viewModel.loadNextPage()
         }
+    }
+
+    func scrollViewWillEndDragging(
+        _ scrollView: UIScrollView,
+        withVelocity velocity: CGPoint,
+        targetContentOffset: UnsafeMutablePointer<CGPoint>
+    ) {
+        let maxStep = scrollView.bounds.height * Constants.Home.maxFlingScreenFactor
+        guard maxStep > 0 else { return }
+        let current = scrollView.contentOffset.y
+        let delta = targetContentOffset.pointee.y - current
+        if abs(delta) > maxStep {
+            targetContentOffset.pointee.y = current + (delta > 0 ? maxStep : -maxStep)
+        }
+    }
+}
+
+extension HomeViewController: UICollectionViewDataSourcePrefetching {
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        let urls = indexPaths.compactMap { indexPath -> URL? in
+            guard let item = dataSource.itemIdentifier(for: indexPath),
+                  case let .product(product) = item.kind else { return nil }
+            return product.imageURL
+        }
+        ImageLoader.shared.prefetch(urls)
     }
 }
 

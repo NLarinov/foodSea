@@ -52,6 +52,8 @@ enum Constants {
         static let detailTTL: TimeInterval = 600
         static let searchTTL: TimeInterval = 120
         static let imageCacheMaxSize = 100 * 1024 * 1024
+        static let imageMemoryCountLimit = 300
+        static let imageDiskDirectoryName = "FoodSeaImageCache"
     }
 
     enum Mock {
@@ -195,12 +197,15 @@ enum Constants {
         static let allFilterTitle = "Все"
         static let forYouTitle = "Рекомендуем для вас"
         static let promoTitle = "Акции и скидки"
+        static let maxFlingScreenFactor: CGFloat = 1.2
     }
 
     enum Catalog {
         static let subcategoryCellHeight: CGFloat = 100
         static let subcategoryCellWidth: CGFloat = 110
         static let subcategoryIconSize: CGFloat = 32
+        static let productProbePerPage = 1
+        static let emptyCategoriesMessage = "Нет доступных категорий"
     }
 
     enum OAuth {
@@ -248,6 +253,8 @@ enum Constants {
         static let voiceHint = "Например: молоко, хлеб белый, 2 кг яблок"
         static let voiceRecording = "Говорите..."
         static let voiceProcessing = "Обработка..."
+        static let voiceNoSpeech = "Не удалось распознать речь. Нажмите на микрофон и попробуйте ещё раз"
+        static let voiceNoResults = "Не удалось распознать товары. Попробуйте сказать иначе"
         static let addAllToCart = "Добавить все в корзину"
         static let submitOrder = "Оформить заказ"
         static let orderConfirmed = "Заказ оформлен"

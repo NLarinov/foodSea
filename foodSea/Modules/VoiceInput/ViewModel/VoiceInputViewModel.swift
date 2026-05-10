@@ -6,6 +6,7 @@ enum VoiceInputState: Sendable {
     case listening(partialText: String)
     case processing
     case results
+    case empty(message: String)
     case error(AppError)
 }
 
@@ -48,8 +49,8 @@ final class VoiceInputViewModel {
             speechCancellable?.cancel()
             speechCancellable = nil
             stopDurationTimer()
-            let finalText = await speechRecognizer.stop()
-            await processFinalText(finalText)
+            let result = await speechRecognizer.stop()
+            await processFinalText(result.transcript, recognitionError: result.errorMessage)
         }
     }
 
@@ -108,17 +109,21 @@ final class VoiceInputViewModel {
             }
     }
 
-    private func processFinalText(_ text: String) async {
+    private func processFinalText(_ text: String, recognitionError: String?) async {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else {
-            state = .idle
+            if let recognitionError {
+                state = .error(.unknown(recognitionError))
+            } else {
+                state = .empty(message: Constants.Strings.voiceNoSpeech)
+            }
             return
         }
         state = .processing
         do {
             let items = try await voiceService.parseText(trimmed, locale: Constants.Voice.locale)
             recognizedProducts = items
-            state = items.isEmpty ? .idle : .results
+            state = items.isEmpty ? .empty(message: Constants.Strings.voiceNoResults) : .results
         } catch let error as AppError {
             state = .error(error)
         } catch {

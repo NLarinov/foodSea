@@ -16,7 +16,10 @@ final class CatalogTabCoordinator: Coordinator {
     }
 
     func start() {
-        let browseVC = CatalogBrowseViewController(categoryService: container.categoryService)
+        let browseVC = CatalogBrowseViewController(
+            categoryService: container.categoryService,
+            productService: container.productService
+        )
         browseVC.title = Constants.TabBar.catalogTitle
         browseVC.onSubcategorySelected = { [weak self] subcategory in
             self?.showSubcategoryProducts(subcategory)
@@ -53,7 +56,8 @@ final class CatalogTabCoordinator: Coordinator {
         let viewModel = ProductDetailViewModel(
             productId: product.id,
             productService: container.productService,
-            cartService: container.cartService
+            cartService: container.cartService,
+            initialProduct: product
         )
         let detailVC = ProductDetailViewController(viewModel: viewModel)
         detailVC.onSimilarProductSelected = { [weak self] product in

@@ -64,7 +64,7 @@ extension APIEndpoint {
         case .oauthYandexSDKCallback:          return "/api/v1/auth/oauth/native/yandex/sdk/callback"
         case .listProducts:                    return "/api/v1/products"
         case .getProduct(let id):              return "/api/v1/products/\(id)"
-        case .getProductByBarcode(let code):   return "/api/v1/products/barcode/\(code)"
+        case .getProductByBarcode(let code):   return "/api/v1/barcode/\(code)"
         case .getOffers(let productId):        return "/api/v1/products/\(productId)/offers"
         case .searchProducts:                  return "/api/v1/search"
         case .listCategories:                  return "/api/v1/categories"

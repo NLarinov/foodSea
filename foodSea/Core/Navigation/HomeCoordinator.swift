@@ -45,7 +45,8 @@ final class HomeCoordinator: Coordinator {
         let viewModel = ProductDetailViewModel(
             productId: product.id,
             productService: container.productService,
-            cartService: container.cartService
+            cartService: container.cartService,
+            initialProduct: product
         )
         let detailVC = ProductDetailViewController(viewModel: viewModel)
         detailVC.onSimilarProductSelected = { [weak self] product in
@@ -73,8 +74,10 @@ final class HomeCoordinator: Coordinator {
         )
         let voiceVC = VoiceInputViewController(viewModel: viewModel)
         let navVC = UINavigationController(rootViewController: voiceVC)
-        voiceVC.onAddedToCart = { [weak navVC] in
-            navVC?.dismiss(animated: true)
+        voiceVC.onAddedToCart = { [weak self, weak navVC] in
+            navVC?.dismiss(animated: true) {
+                self?.navigationController.tabBarController?.selectedIndex = 2
+            }
         }
         voiceVC.onClose = { [weak navVC] in
             navVC?.dismiss(animated: true)

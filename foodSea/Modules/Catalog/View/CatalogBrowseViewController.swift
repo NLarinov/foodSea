@@ -4,6 +4,7 @@ final class CatalogBrowseViewController: UIViewController {
     var onSubcategorySelected: ((Category) -> Void)?
 
     private let categoryService: any CategoryServiceProtocol
+    private let productService: any ProductServiceProtocol
     private var sections: [Category] = []
 
     private lazy var collectionView: UICollectionView = {
@@ -42,8 +43,12 @@ final class CatalogBrowseViewController: UIViewController {
         return l
     }()
 
-    init(categoryService: any CategoryServiceProtocol) {
+    init(
+        categoryService: any CategoryServiceProtocol,
+        productService: any ProductServiceProtocol
+    ) {
         self.categoryService = categoryService
+        self.productService = productService
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -86,11 +91,14 @@ final class CatalogBrowseViewController: UIViewController {
             guard let self else { return }
             do {
                 let tree = try await categoryService.fetchCategoryTree()
+                let visible = await self.filterCategoriesWithProducts(tree)
                 await MainActor.run {
-                    self.sections = tree.filter { !$0.children.isEmpty }
+                    self.sections = visible
                     self.spinner.stopAnimating()
                     self.refreshControl.endRefreshing()
                     self.collectionView.reloadData()
+                    self.errorLabel.text = Constants.Catalog.emptyCategoriesMessage
+                    self.errorLabel.isHidden = !visible.isEmpty
                 }
             } catch {
                 await MainActor.run {
@@ -100,6 +108,57 @@ final class CatalogBrowseViewController: UIViewController {
                     self.errorLabel.isHidden = false
                 }
             }
+        }
+    }
+
+    private func filterCategoriesWithProducts(_ tree: [Category]) async -> [Category] {
+        let candidates = tree.filter { !$0.children.isEmpty }
+        let subcategoryIds = candidates.flatMap { $0.children.map(\.id) }
+        guard !subcategoryIds.isEmpty else { return [] }
+
+        let productService = self.productService
+        let nonEmptyIds = await withTaskGroup(of: (String, Bool).self) { group in
+            for id in subcategoryIds {
+                group.addTask {
+                    (id, await Self.hasProducts(subcategoryId: id, productService: productService))
+                }
+            }
+            var result: Set<String> = []
+            for await (id, hasProducts) in group where hasProducts {
+                result.insert(id)
+            }
+            return result
+        }
+
+        return candidates.compactMap { section in
+            let children = section.children.filter { nonEmptyIds.contains($0.id) }
+            guard !children.isEmpty else { return nil }
+            return Category(
+                id: section.id,
+                name: section.name,
+                slug: section.slug,
+                parentId: section.parentId,
+                sortOrder: section.sortOrder,
+                children: children
+            )
+        }
+    }
+
+    private static func hasProducts(
+        subcategoryId: String,
+        productService: any ProductServiceProtocol
+    ) async -> Bool {
+        do {
+            let products = try await productService.fetchProducts(
+                page: 1,
+                perPage: Constants.Catalog.productProbePerPage,
+                categoryId: nil,
+                subcategoryId: subcategoryId,
+                brandId: nil
+            )
+            return !products.isEmpty
+        } catch {
+            return true
         }
     }
 

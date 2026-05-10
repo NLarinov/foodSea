@@ -14,6 +14,7 @@ final class CartViewModel {
     private let cartService: any CartServiceProtocol
     private let productService: any ProductServiceProtocol
     private let cartStorage = CartStorage()
+    private var loadTask: Task<Void, Never>?
 
     nonisolated init(cartService: any CartServiceProtocol, productService: any ProductServiceProtocol) {
         self.cartService = cartService
@@ -46,14 +47,18 @@ final class CartViewModel {
     }
 
     func loadCart() {
+        loadTask?.cancel()
         isLoading = true
-        Task {
+        loadTask = Task { [weak self] in
+            guard let self else { return }
             do {
                 let items = try await cartService.getCartItems()
+                guard !Task.isCancelled else { return }
                 cartItems = items
                 recalculate()
                 persist()
             } catch {
+                guard !Task.isCancelled else { return }
                 let stored = cartStorage.load()
                 cartItems = stored
                 recalculate()

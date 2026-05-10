@@ -15,33 +15,52 @@ final class FilterViewController: UIViewController {
         return stack
     }()
 
-    private let categoriesLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Категории"
-        label.font = .systemFont(ofSize: Constants.UI.titleFontSize, weight: .semibold)
-        label.textColor = UIColor.App.label
-        return label
+    private var categoriesExpanded = false
+    private var brandsExpanded = false
+
+    private lazy var categoriesHeaderButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.title = "Категории"
+        config.baseForegroundColor = UIColor.App.label
+        config.image = UIImage(systemName: "chevron.right")
+        config.imagePlacement = .trailing
+        config.imagePadding = Constants.UI.smallPadding
+        config.contentInsets = .zero
+        let button = UIButton(configuration: config)
+        button.contentHorizontalAlignment = .fill
+        button.titleLabel?.font = .systemFont(ofSize: Constants.UI.titleFontSize, weight: .semibold)
+        button.addTarget(self, action: #selector(toggleCategories), for: .touchUpInside)
+        return button
     }()
 
     private let categoriesStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = Constants.UI.smallPadding
+        stack.isHidden = true
         return stack
     }()
 
-    private let brandsLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Бренды"
-        label.font = .systemFont(ofSize: Constants.UI.titleFontSize, weight: .semibold)
-        label.textColor = UIColor.App.label
-        return label
+    private lazy var brandsHeaderButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.title = "Бренды"
+        config.baseForegroundColor = UIColor.App.label
+        config.image = UIImage(systemName: "chevron.right")
+        config.imagePlacement = .trailing
+        config.imagePadding = Constants.UI.smallPadding
+        config.contentInsets = .zero
+        let button = UIButton(configuration: config)
+        button.contentHorizontalAlignment = .fill
+        button.titleLabel?.font = .systemFont(ofSize: Constants.UI.titleFontSize, weight: .semibold)
+        button.addTarget(self, action: #selector(toggleBrands), for: .touchUpInside)
+        return button
     }()
 
     private let brandsStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = Constants.UI.smallPadding
+        stack.isHidden = true
         return stack
     }()
 
@@ -135,9 +154,9 @@ final class FilterViewController: UIViewController {
         applyButton.setSize(height: Constants.UI.buttonHeight)
 
         contentStack.addArrangedSubview(headerStack)
-        contentStack.addArrangedSubview(categoriesLabel)
+        contentStack.addArrangedSubview(categoriesHeaderButton)
         contentStack.addArrangedSubview(categoriesStack)
-        contentStack.addArrangedSubview(brandsLabel)
+        contentStack.addArrangedSubview(brandsHeaderButton)
         contentStack.addArrangedSubview(brandsStack)
         contentStack.addArrangedSubview(priceLabel)
         contentStack.addArrangedSubview(priceStack)
@@ -250,6 +269,26 @@ final class FilterViewController: UIViewController {
             let brandId = viewModel.availableBrands[index].id
             let isSelected = (selected == brandId)
             button.configuration?.image = UIImage(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+        }
+    }
+
+    @objc private func toggleCategories() {
+        categoriesExpanded.toggle()
+        let chevron = categoriesExpanded ? "chevron.down" : "chevron.right"
+        categoriesHeaderButton.configuration?.image = UIImage(systemName: chevron)
+        UIView.animate(withDuration: Constants.Animation.defaultDuration) {
+            self.categoriesStack.isHidden = !self.categoriesExpanded
+            self.contentStack.layoutIfNeeded()
+        }
+    }
+
+    @objc private func toggleBrands() {
+        brandsExpanded.toggle()
+        let chevron = brandsExpanded ? "chevron.down" : "chevron.right"
+        brandsHeaderButton.configuration?.image = UIImage(systemName: chevron)
+        UIView.animate(withDuration: Constants.Animation.defaultDuration) {
+            self.brandsStack.isHidden = !self.brandsExpanded
+            self.contentStack.layoutIfNeeded()
         }
     }
 

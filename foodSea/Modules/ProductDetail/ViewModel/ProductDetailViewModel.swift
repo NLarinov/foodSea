@@ -16,15 +16,17 @@ final class ProductDetailViewModel {
     nonisolated init(
         productId: String,
         productService: any ProductServiceProtocol,
-        cartService: any CartServiceProtocol
+        cartService: any CartServiceProtocol,
+        initialProduct: Product? = nil
     ) {
         self.productId = productId
         self.productService = productService
         self.cartService = cartService
+        self.product = initialProduct
     }
 
     func loadProduct() {
-        isLoading = true
+        if product == nil { isLoading = true }
         error = nil
         Task {
             do {

@@ -32,6 +32,8 @@ final class SpeechRecognizer: @unchecked Sendable {
     }
 
     private var lastTranscript: String = ""
+    private var lastError: Error?
+    private var isStopping = false
 
     init(localeIdentifier: String = Constants.Voice.appleLocaleIdentifier) {
         self.recognizer = SFSpeechRecognizer(locale: Locale(identifier: localeIdentifier))
@@ -70,9 +72,6 @@ final class SpeechRecognizer: @unchecked Sendable {
 
         let request = SFSpeechAudioBufferRecognitionRequest()
         request.shouldReportPartialResults = true
-        if recognizer.supportsOnDeviceRecognition {
-            request.requiresOnDeviceRecognition = true
-        }
         self.request = request
 
         let inputNode = audioEngine.inputNode
@@ -90,6 +89,8 @@ final class SpeechRecognizer: @unchecked Sendable {
         }
 
         lastTranscript = ""
+        lastError = nil
+        isStopping = false
         task = recognizer.recognitionTask(with: request) { [weak self] result, error in
             guard let self else { return }
             if let result {
@@ -97,20 +98,25 @@ final class SpeechRecognizer: @unchecked Sendable {
                 self.lastTranscript = text
                 self.partialTextSubject.send(text)
             }
+            if let error, !self.isStopping, self.lastTranscript.isEmpty {
+                self.lastError = error
+            }
             if error != nil || (result?.isFinal ?? false) {
                 self.cleanupSession()
             }
         }
     }
 
-    func stop() async -> String {
+    func stop() async -> (transcript: String, errorMessage: String?) {
+        isStopping = true
         request?.endAudio()
         audioEngine.stop()
         audioEngine.inputNode.removeTap(onBus: 0)
         try? await Task.sleep(nanoseconds: Constants.Voice.stopGraceNanoseconds)
         let final = lastTranscript
+        let errorMessage = final.isEmpty ? lastError?.localizedDescription : nil
         cleanupSession()
-        return final
+        return (final, errorMessage)
     }
 
     private func cleanupSession() {

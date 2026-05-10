@@ -15,6 +15,14 @@ final class PhotoSearchViewController: UIViewController {
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var captureDevice: AVCaptureDevice?
 
+    private let frozenFrameView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        iv.isHidden = true
+        return iv
+    }()
+
     private let hintLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.Strings.photoSearchHint
@@ -133,6 +141,15 @@ final class PhotoSearchViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .black
 
+        view.addSubview(frozenFrameView)
+        frozenFrameView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            frozenFrameView.topAnchor.constraint(equalTo: view.topAnchor),
+            frozenFrameView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            frozenFrameView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            frozenFrameView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+
         [hintLabel, closeButton, bottomPanel, activityIndicator, resultOverlay].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -245,6 +262,7 @@ final class PhotoSearchViewController: UIViewController {
         case .idle:
             activityIndicator.stopAnimating()
             resultOverlay.isHidden = true
+            unfreezeFrame()
             setControlsEnabled(true)
         case .processing:
             activityIndicator.startAnimating()
@@ -267,6 +285,18 @@ final class PhotoSearchViewController: UIViewController {
         shutterButton.isEnabled = enabled
         galleryButton.isEnabled = enabled
         torchButton.isEnabled = enabled
+    }
+
+    private func freezeFrame(_ image: UIImage) {
+        frozenFrameView.image = image
+        frozenFrameView.isHidden = false
+        previewLayer?.connection?.isEnabled = false
+    }
+
+    private func unfreezeFrame() {
+        frozenFrameView.isHidden = true
+        frozenFrameView.image = nil
+        previewLayer?.connection?.isEnabled = true
     }
 
     private func handleProductFound(_ product: Product) {
@@ -425,6 +455,7 @@ extension PhotoSearchViewController: AVCapturePhotoCaptureDelegate {
             return
         }
         Task { @MainActor in
+            self.freezeFrame(image)
             guard let jpeg = self.compressForUpload(image) else {
                 self.viewModel.state = .failed(.unknown(Constants.Strings.serverError))
                 return
@@ -444,6 +475,7 @@ extension PhotoSearchViewController: PHPickerViewControllerDelegate {
             guard let image = object as? UIImage else { return }
             Task { @MainActor in
                 guard let self else { return }
+                self.freezeFrame(image)
                 guard let jpeg = self.compressForUpload(image) else {
                     self.viewModel.state = .failed(.unknown(Constants.Strings.serverError))
                     return
